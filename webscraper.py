@@ -4,6 +4,7 @@ import random
 from bs4 import BeautifulSoup
 import requests
 from dataclasses import dataclass
+from database_handler.initialize_database import Database
 
 class Shop:
     def __init__(self, id, name, price, shop_url):
@@ -87,6 +88,7 @@ def scraper(name, page=1):
 
 
 if __name__ == "__main__":
+    Database().create_tables()
     toylist = scraper("samochod")
     for toy in toylist:
         print(toy)

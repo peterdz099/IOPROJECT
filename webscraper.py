@@ -5,13 +5,17 @@ from bs4 import BeautifulSoup
 import requests
 from dataclasses import dataclass
 from database_handler.initialize_database import Database
+from database_handler.toys import Toys as Toys_resource
+from database_handler.offers import Offers as Offers_resource
+
 
 class Shop:
-    def __init__(self, id, name, price, shop_url):
+    def __init__(self, id, name, price, shop_url, offer_id):
         self.id = id
         self.name = name
         self.price = price
         self.shop_url = 'ceneo.pl' + shop_url
+        self.offer_id = offer_id
         # self.deliver_method = deliver_method
         # self.deliver_price = deliver_price
 
@@ -19,7 +23,8 @@ class Shop:
         return f'name: {self.name}, ' \
                f'id: {self.id}, ' \
                f'price: {self.price}, ' \
-               f'url: {self.shop_url} '
+               f'url: {self.shop_url} ' \
+               f'offer_id: {self.offer_id} '
 
 class Toy:
     def __init__(self, id, name, min_price, manufacturer, shop_num, photo_url):
@@ -54,7 +59,8 @@ class Toy:
                 shop_id = shop_info.get('data-shop')
                 shop_url = shop_info.get('data-click-url')
                 shop_price = shop_info.get('data-price')
-                shop = Shop(name=shop_name, id=shop_id, price=shop_price, shop_url=shop_url)
+                offer_id = shop_info.get('data-offerid')
+                shop = Shop(name=shop_name, id=shop_id, price=shop_price, shop_url=shop_url, offer_id=offer_id)
                 shop_list.append(shop)
         self.shop_list = shop_list
 
@@ -88,10 +94,16 @@ def scraper(name, page=1):
 
 
 if __name__ == "__main__":
-    Database().create_tables()
+    db = Database()
+    db.create_tables()
+
     toylist = scraper("samochod")
     for toy in toylist:
         print(toy)
+        Toys_resource(db).add_toy(toy.id, toy.name, toy.min_price, toy.manufacturer, toy.shop_num, toy.photo_url)
         for shop in toy.shop_list:
             print(shop)
+            Offers_resource(db).add_offer(shop.offer_id, shop.shop_url, toy.id, shop.id, shop.name, shop.price)
         print("############_________###############")
+
+    db.close_connection()

@@ -74,9 +74,9 @@ class Database:
     def create_search_history_table(self):
         create_search_history_table_query = """
             CREATE TABLE IF NOT EXISTS search_history (
-                id INT(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
                 user_id INT(11),
                 user_input VARCHAR(255),
+                datetime DATETIME,
                 FOREIGN KEY(user_id) REFERENCES users(id)
             )
             """
@@ -99,24 +99,9 @@ class Database:
             cursor.execute(create_shopping_list_table_query)
             self._connection.commit()
 
-    def create_search_records_table(self):
-        create_search_records_table_query = """
-            CREATE TABLE IF NOT EXISTS search_records (
-                search_history_id INT(11),
-                offer_id INT(11),
-                FOREIGN KEY(search_history_id) REFERENCES search_history(id),
-                FOREIGN KEY(offer_id) REFERENCES offers(id)
-            )
-            """
-
-        with self._connection.cursor() as cursor:
-            cursor.execute(create_search_records_table_query)
-            self._connection.commit()
-
     def create_tables(self):
         self.create_users_table()
         self.create_toys_table()
         self.create_offers_table()
         self.create_search_history_table()
         self.create_shopping_list_table()
-        self.create_search_records_table()

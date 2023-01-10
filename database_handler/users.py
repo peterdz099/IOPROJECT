@@ -9,6 +9,12 @@ def hash_password(password):
     return bcrypt.hashpw(byte_pwd, salt)
 
 
+def is_pwd_correct(pwd, hashed_pwd) -> bool:
+    pwd_byte = pwd.encode('utf-8')
+    hashed_pwd_byte = hashed_pwd.encode('utf-8')
+    return bcrypt.checkpw(pwd_byte, hashed_pwd_byte)
+
+
 class Users:
     def __init__(self, database: Database):
         self.connection = database.get_connection()
@@ -30,7 +36,7 @@ class Users:
         except Error as e:
             print(e)
 
-    def select_user(self, user_id, username, email) -> dict:
+    def select_user(self, **user_fields) -> dict:
         select_user_query = """
                         SELECT * FROM users
                         WHERE id = %s
@@ -38,7 +44,7 @@ class Users:
                         OR email = %s
                         """
 
-        user_args = (user_id, username, email)
+        user_args = (user_fields.get('id'), user_fields.get('username'), user_fields.get('email'))
 
         try:
             with self.connection.cursor() as cursor:

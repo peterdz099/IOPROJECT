@@ -22,7 +22,7 @@ class Toys:
         except Error as e:
             print(e)
 
-    def select_toy(self, toy_id):
+    def select_toy(self, toy_id) -> dict:
         select_toy_query = """
                         SELECT * FROM toys
                         WHERE id = %s

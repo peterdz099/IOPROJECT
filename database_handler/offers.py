@@ -22,7 +22,7 @@ class Offers:
         except Error as e:
             print(e)
 
-    def select_offer(self, offer_id):
+    def select_offer(self, offer_id) -> dict:
         select_offer_query = """
                         SELECT * FROM offers
                         WHERE id = %s

@@ -1,0 +1,180 @@
+<LoginWindow>:
+    name: "login"
+    FloatLayout:
+        orientation: "vertical"
+        size: root.width, root.height
+        canvas.before:
+            Rectangle
+                pos: self.pos
+                size: self.size
+                source: 'background.png'
+
+#        Label:
+#            text:"HELLO!"
+#            font_size: 20
+#            color: (0,0,0,1)
+#            size_hint: 0.6, 0.10
+#            pos_hint:{"x": 0.2,"y": 0.80}
+#            canvas.before:
+#                Color:
+#                    rgba: (1, 1, 0, 1)
+#                Rectangle:
+#                    pos: self.pos
+#                    size: self.size
+        Image:
+            source: 'Hello.png'
+            size_hint: 0.8, 0.8
+            pos_hint:{"x": 0.1,"y": 0.38}
+
+        Label:
+            text:"Log in or create new account"
+            font_size: 12
+            color: 42/255, 42/255, 42/255,1
+            size_hint: 0.6, 0.10
+            pos_hint:{"x": 0.2,"y": 0.60}
+            canvas.before:
+                Color:
+                    rgba: (1, 1, 0, 0)
+                Rectangle:
+                    pos: self.pos
+                    size: self.size
+
+        MDTextField:
+            hint_text: "E-mail"
+
+            mode: "fill"
+            icon_left: "account"
+            multiline: False
+            size_hint: 0.7, 0.09
+            pos_hint:{"x": 0.15,"y": 0.50}
+
+
+
+        MDTextField:
+            hint_text: "Password"
+            mode: "fill"
+            icon_left: "key-variant"
+            multiline: False
+            size_hint: 0.7, 0.09
+            pos_hint:{"x": 0.15,"y": 0.395}
+            password: True
+
+
+        MDFillRoundFlatButton:
+            text: "Log in"
+            font_size: 16
+            size_hint: 0.6, 0.10
+            pos_hint:{"x":0.2,"y":0.26}
+            md_bg_color: "#2c4591"
+            on_release:
+                app.root.current = "register"
+                root.manager.transition.direction = "left"
+
+        Button:
+            text: "Create new account"
+            underline: True
+            font_size: 13
+            size_hint: 0.6, 0.10
+            pos_hint:{"x":0.2,"y":0.184}
+            background_color: (133/255,225/255,189/255,0)
+            color: (92/255, 94/255, 94/255,1)
+            on_release:
+                root.change()
+                root.manager.transition.direction = "left"
+
+
+<RegisterWindow>:
+    name: "register"
+
+    email: email
+    username: username
+    password: passwd
+    repeatedPassword: repeatedPassword
+
+    FloatLayout:
+
+        orientation: "vertical"
+        size: root.width, root.height
+        canvas.before:
+            Rectangle
+                pos: self.pos
+                size: self.size
+                source: 'background.png'
+
+        Label:
+            text:"Fill the form and cilck submit button"
+            font_size: 15
+            color: 42/255, 42/255, 42/255,1
+            size_hint: 0.6, 0.10
+            pos_hint:{"x": 0.2,"y": 0.80}
+            canvas.before:
+                Color:
+                    rgba: (1, 1, 0, 0)
+                Rectangle:
+                    pos: self.pos
+                    size: self.size
+
+        MDTextField:
+            id: email
+            hint_text: "E-mail"
+            mode: "fill"
+            icon_left: "email"
+            multiline: False
+            size_hint: 0.7, 0.09
+            pos_hint:{"x": 0.15,"y": 0.71}
+
+
+        MDTextField:
+            id: username
+            hint_text: "Username"
+            mode: "fill"
+            icon_left: "account"
+            multiline: False
+            size_hint: 0.7, 0.09
+            pos_hint:{"x": 0.15,"y": 0.605}
+
+
+
+        MDTextField:
+            id: passwd
+            hint_text: "Password"
+            mode: "fill"
+            icon_left: "key-variant"
+            multiline: False
+            size_hint: 0.7, 0.09
+            pos_hint:{"x": 0.15,"y": 0.50}
+
+
+        MDTextField:
+            id: repeatedPassword
+            hint_text: "Confirm Password"
+            mode: "fill"
+            icon_left: "key-variant"
+            multiline: False
+            size_hint: 0.7, 0.09
+            pos_hint:{"x": 0.15,"y": 0.395}
+            password: True
+
+
+        MDFillRoundFlatButton:
+            text: "Submit"
+            font_size: 16
+            size_hint: 0.6, 0.10
+            pos_hint:{"x":0.2,"y":0.26}
+            md_bg_color: "#2c4591"
+            on_release:
+                root.onClick()
+                root.backToLogin()
+                root.manager.transition.direction = "right"
+
+        Button:
+            text: "Back to Login"
+            underline: True
+            font_size: 13
+            size_hint: 0.6, 0.10
+            pos_hint:{"x":0.2,"y":0.184}
+            background_color: (133/255,225/255,189/255,0)
+            color: (92/255, 94/255, 94/255,1)
+            on_release:
+                root.backToLogin()
+                root.manager.transition.direction = "right"

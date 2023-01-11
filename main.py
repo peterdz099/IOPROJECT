@@ -53,8 +53,10 @@ class RegisterWindow(Screen):
 
             if not verify_email(self.email.text):
                 print("THAT EMAIL DOESN'T EXISTS")
+                self.reset()
             elif self.password.text != self.repeatedPassword.text:
                 print("PASSWORDS DON'T MATCH")
+                self.reset()
             elif check:
                 print("USER ALREADY EXISTS")
             else:
@@ -63,6 +65,8 @@ class RegisterWindow(Screen):
                     self.reset()
                     sm.current = "login"
                     print("OK")
+        else:
+            self.reset()
 
     def reset(self):
         self.email.text = ""

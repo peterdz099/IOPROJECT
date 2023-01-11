@@ -1,5 +1,9 @@
 <LoginWindow>:
     name: "login"
+
+    email: email
+    password: passwd
+
     FloatLayout:
         orientation: "vertical"
         size: root.width, root.height
@@ -7,22 +11,10 @@
             Rectangle
                 pos: self.pos
                 size: self.size
-                source: 'background.png'
+                source: 'resources/background.png'
 
-#        Label:
-#            text:"HELLO!"
-#            font_size: 20
-#            color: (0,0,0,1)
-#            size_hint: 0.6, 0.10
-#            pos_hint:{"x": 0.2,"y": 0.80}
-#            canvas.before:
-#                Color:
-#                    rgba: (1, 1, 0, 1)
-#                Rectangle:
-#                    pos: self.pos
-#                    size: self.size
         Image:
-            source: 'Hello.png'
+            source: 'resources/Hello.png'
             size_hint: 0.8, 0.8
             pos_hint:{"x": 0.1,"y": 0.38}
 
@@ -40,8 +32,8 @@
                     size: self.size
 
         MDTextField:
-            hint_text: "E-mail"
-
+            hint_text: "E-mail or username"
+            id: email
             mode: "fill"
             icon_left: "account"
             multiline: False
@@ -52,6 +44,7 @@
 
         MDTextField:
             hint_text: "Password"
+            id: passwd
             mode: "fill"
             icon_left: "key-variant"
             multiline: False
@@ -67,7 +60,8 @@
             pos_hint:{"x":0.2,"y":0.26}
             md_bg_color: "#2c4591"
             on_release:
-                app.root.current = "register"
+                root.login()
+                root.reset()
                 root.manager.transition.direction = "left"
 
         Button:
@@ -79,7 +73,7 @@
             background_color: (133/255,225/255,189/255,0)
             color: (92/255, 94/255, 94/255,1)
             on_release:
-                root.change()
+                root.create_new_account()
                 root.manager.transition.direction = "left"
 
 
@@ -99,7 +93,7 @@
             Rectangle
                 pos: self.pos
                 size: self.size
-                source: 'background.png'
+                source: 'resources/background.png'
 
         Label:
             text:"Fill the form and cilck submit button"
@@ -163,8 +157,8 @@
             pos_hint:{"x":0.2,"y":0.26}
             md_bg_color: "#2c4591"
             on_release:
-                root.onClick()
-                root.backToLogin()
+                root.submit()
+                #root.back_to_login()
                 root.manager.transition.direction = "right"
 
         Button:
@@ -176,5 +170,29 @@
             background_color: (133/255,225/255,189/255,0)
             color: (92/255, 94/255, 94/255,1)
             on_release:
-                root.backToLogin()
+                root.back_to_login()
+                root.manager.transition.direction = "right"
+
+
+<MainWindow>:
+    name: "main"
+
+    FloatLayout:
+
+        orientation: "vertical"
+        size: root.width, root.height
+        canvas.before:
+            Rectangle
+                pos: self.pos
+                size: self.size
+                source: 'resources/background.png'
+
+        MDFillRoundFlatButton:
+            text: "Submit"
+            font_size: 16
+            size_hint: 0.6, 0.10
+            pos_hint:{"x":0.2,"y":0.26}
+            md_bg_color: "#2c4591"
+            on_release:
+                app.root.current ="login"
                 root.manager.transition.direction = "right"

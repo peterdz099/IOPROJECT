@@ -36,7 +36,7 @@ class Users:
         except Error as e:
             print(e)
 
-    def select_user(self, **user_fields) -> dict:
+    def select_user(self, **user_fields: object) -> dict:
         select_user_query = """
                         SELECT * FROM users
                         WHERE id = %s

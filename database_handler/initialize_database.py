@@ -3,6 +3,8 @@ from mysql.connector import connect
 
 
 class Database:
+    
+
     def __init__(self):
         self._connection = None
         self.initialize_connection()

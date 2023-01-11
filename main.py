@@ -18,7 +18,7 @@ class LoginWindow(Screen):
         dictionary = usersResources.select_user(email=self.email.text, username=self.email.text)
 
         if dictionary:
-            if is_pwd_correct(self.password.text, "$2b$12$ymUn/aGprfBI/8GKlScaYe6lFB6MblBrroBhBkJNUt6G1eg.Ajg1e"):
+            if is_pwd_correct(self.password.text, dictionary.get('password')):
                 self.reset()
                 sm.current = "main"
             else:

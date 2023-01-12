@@ -1,0 +1,22 @@
+<MainWindow>:
+    name: "main"
+
+    FloatLayout:
+
+        orientation: "vertical"
+        size: root.width, root.height
+        canvas.before:
+            Rectangle
+                pos: self.pos
+                size: self.size
+                source: 'resources/background.png'
+
+        MDFillRoundFlatButton:
+            text: "Submit"
+            font_size: 16
+            size_hint: 0.6, 0.10
+            pos_hint:{"x":0.2,"y":0.26}
+            md_bg_color: "#2c4591"
+            on_release:
+                app.root.current ="login"
+                root.manager.transition.direction = "right"

@@ -42,8 +42,6 @@ class RegisterWindow(Screen):
     repeatedPassword = ObjectProperty(None)
 
     def submit(self):
-        print(self.email.text, self.username.text, self.password.text, self.repeatedPassword.text)
-
         if self.username.text != "" and self.email.text != "" and self.password.text != "" \
                 and self.repeatedPassword.text != "":
 
@@ -98,6 +96,7 @@ class MyApp(MDApp):
     def build(self):
         self.theme_cls.theme_style = "Light"
         Builder.load_file('views.kv')
+        Builder.load_file('mainViews.kv')
         sm.add_widget(LoginWindow(name="login"))
         sm.add_widget(RegisterWindow(name="register"))
         sm.add_widget(MainWindow(name="main"))

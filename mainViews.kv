@@ -1,9 +1,9 @@
 <MainWindow>:
     name: "main"
+
+    logged: loggedddd
     FloatLayout:
         orientation: 'vertical'
-
-
 
     MDBottomNavigation:
         #color stuff
@@ -72,11 +72,46 @@
             name: 'screen 3'
             text: "Profile"
             icon: 'account-box'
+            id: loggedddd
 
-            MDLabel:
+            MDFloatLayout:
+                md_bg_color: 1,1,1,1
 
-                halign: 'center'
 
+
+                MDLabel:
+                    text: " You are logged in as:"
+                    font_size: 14
+                    halign: 'center'
+                    pos_hint:{"x": 0,"y": -0.1}
+
+                Image:
+                    source: 'resources/big ball.png'
+                    size_hint: 1,1
+                    pos_hint:{"x": -0.4,"y":-0.05}
+                Image:
+                    source: 'resources/big ball.png'
+                    size_hint: 1,1
+                    pos_hint:{"x": 0.4,"y":0.4}
+                Image:
+                    source: 'resources/big ball.png'
+                    size_hint: 1,1
+                    pos_hint:{"x": 0.4,"y": -0.4}
+
+                Image:
+                    source: 'resources/user.png'
+                    size_hint: 0.8, 0.8
+                    halign: "center"
+                    pos_hint:{"x": 0.1,"y": 0.3}
+
+                MDFillRoundFlatButton:
+                    text: "Log out"
+                    font_size: 16
+                    size_hint: 0.6, 0.10
+                    pos_hint:{"x":0.2,"y": 0.2}
+                    md_bg_color: "#2c4591"
+                    on_release:
+                        root.manager.transition.direction = "left"
 
 
 

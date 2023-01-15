@@ -1,9 +1,5 @@
-<MainWindow>:
-    name: "main"
-
-    logged: loggedddd
-    FloatLayout:
-        orientation: 'vertical'
+<WithoutLoginWindow>:
+    name: "without"
 
     MDBottomNavigation:
         #color stuff
@@ -11,13 +7,10 @@
 
         MDBottomNavigationItem:
             name: 'screen 1'
-            text: "Python"
-            icon: 'language-python'
+            text: "Search"
+            icon: 'magnify'
 
             MDFloatLayout:
-                md_bg_color: 1,1,1,1
-
-
                 ScreenManager:
                     id: screen_manager
                     Screen:
@@ -44,7 +37,7 @@
                             pos_hint:{"x": 0.4,"y": -0.4}
 
                         MDTextField:
-                            id: search
+                            id: find
                             halign: "center"
                             valign: "center"
                             mode: "rectangle"
@@ -62,6 +55,7 @@
                             on_release:
                                 screen_manager.current = 'screeen2'
                                 screen_manager.transition.direction = "down"
+                                root.change()
 
                     Screen:
                         name: "screeen2"
@@ -82,69 +76,4 @@
                             on_release:
                                 screen_manager.current = 'screeen1'
                                 screen_manager.transition.direction = "up"
-
-        MDBottomNavigationItem:
-            name: 'screen 2'
-            text: "History"
-            icon: 'history'
-
-            MDLabel:
-
-                halign: 'center'
-
-        MDBottomNavigationItem:
-            name: 'screen 3'
-            text: "Cart"
-            icon: 'cart'
-
-            MDLabel:
-
-                halign: 'center'
-
-        MDBottomNavigationItem:
-            name: 'screen 4'
-            text: "Profile"
-            icon: 'account-box'
-            id: loggedddd
-
-            MDFloatLayout:
-                md_bg_color: 1,1,1,1
-                MDLabel:
-                    text: " You are logged in as:"
-                    font_size: 14
-                    halign: 'center'
-                    pos_hint:{"x": 0,"y": -0.1}
-
-                Image:
-                    source: 'resources/big ball.png'
-                    size_hint: 1,1
-                    pos_hint:{"x": -0.4,"y":-0.05}
-                Image:
-                    source: 'resources/big ball.png'
-                    size_hint: 1,1
-                    pos_hint:{"x": 0.4,"y":0.4}
-                Image:
-                    source: 'resources/big ball.png'
-                    size_hint: 1,1
-                    pos_hint:{"x": 0.4,"y": -0.4}
-
-                Image:
-                    source: 'resources/user.png'
-                    size_hint: 0.8, 0.8
-                    pos_hint:{"x": 0.115,"y": 0.3}
-
-                MDFillRoundFlatButton:
-                    text: "Log out"
-                    font_size: 16
-                    size_hint: 0.6, 0.10
-                    pos_hint:{"x":0.2,"y": 0.2}
-                    md_bg_color: "#2c4591"
-                    on_release:
-                        root.back_to_login()
-                        root.manager.transition.direction = "left"
-
-
-
-
-
 

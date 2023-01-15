@@ -5,5 +5,5 @@ bcrypt~=3.2.0
 mysql~=0.0.3
 Kivy~=2.1.0
 kivymd~=1.1.1
-verify-email~=2.4.3
+validate-email-address~=1
 py3dns~=3.2.1

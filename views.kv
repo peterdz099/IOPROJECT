@@ -75,6 +75,17 @@
             on_release:
                 root.create_new_account()
                 root.manager.transition.direction = "left"
+        Button:
+            text: "Continue without login"
+            underline: True
+            font_size: 13
+            size_hint: 0.6, 0.10
+            pos_hint:{"x":0.2,"y":0.125}
+            background_color: (133/255,225/255,189/255,0)
+            color: (92/255, 94/255, 94/255,1)
+            on_release:
+                root.without()
+                root.manager.transition.direction = "left"
 
 
 <RegisterWindow>:
@@ -172,5 +183,15 @@
             on_release:
                 root.back_to_login()
                 root.manager.transition.direction = "right"
+
+
+
+
+
+
+
+
+
+
 
 

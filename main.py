@@ -78,7 +78,9 @@ class RegisterWindow(Screen):
 
 
 class MainWindow(Screen):
-    pass
+    def back_to_login(self):
+        #self.reset()
+        sm.current = "login"
 
 
 class WindowManager(ScreenManager):

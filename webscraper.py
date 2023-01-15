@@ -23,8 +23,7 @@ class Shop:
         return f'name: {self.name}, ' \
                f'id: {self.id}, ' \
                f'price: {self.price}, ' \
-               f'url: {self.shop_url} ' \
-               f'offer_id: {self.offer_id} '
+               f'url: {self.shop_url} '
 
 class Toy:
     def __init__(self, id, name, min_price, manufacturer, shop_num, photo_url):
@@ -44,13 +43,13 @@ class Toy:
                f'number of shops: {self.shop_num}, ' \
                f'img url: {self.photo_url}'
 
-    def getShopInfo(self):
+    def getShopInfo(self, mode):
         product_url = f"https://www.ceneo.pl/{self.id}"
         resp = requests.get(product_url)
-        product_soup = BeautifulSoup(resp.text, 'lxml')
+        product_soup = BeautifulSoup(resp.text, 'html.parser')
         shops_cards = product_soup.find_all('li', class_="product-offers__list__item js_productOfferGroupItem")
         shop_list = []
-        self.shop_num = len(shops_cards)
+        # self.shop_num = len(shops_cards)
         for shop_card in shops_cards:
             shop_info = shop_card.find('div',
                                        class_="product-offer__container clickable-offer js_offer-container-click js_product-offer")
@@ -60,21 +59,46 @@ class Toy:
                 shop_url = shop_info.get('data-click-url')
                 shop_price = shop_info.get('data-price')
                 offer_id = shop_info.get('data-offerid')
-                shop = Shop(name=shop_name, id=shop_id, price=shop_price, shop_url=shop_url, offer_id=offer_id)
-                shop_list.append(shop)
-        self.shop_list = shop_list
+                if mode == 1:
+                    if shop_name == 'allegro.pl':
+                        shop = Shop(name=shop_name, id=shop_id, price=shop_price, shop_url=shop_url, offer_id=offer_id)
+                        shop_list.append(shop)
+                        self.shop_num += 1
+                elif mode == 2:
+                    if shop_name != 'allegro.pl':
+                        shop = Shop(name=shop_name, id=shop_id, price=shop_price, shop_url=shop_url, offer_id=offer_id)
+                        shop_list.append(shop)
+                        self.shop_num += 1
+                else:
+                    shop = Shop(name=shop_name, id=shop_id, price=shop_price, shop_url=shop_url, offer_id=offer_id)
+                    shop_list.append(shop)
+                    self.shop_num += 1
+        self.shop_list = sorted(shop_list, key=operator.attrgetter('price'))
 
 
-def scraper(name, page=1):
+def scraper(name, mode=0, page=1, sort_by_num_shops=False):
+    # mode 0 -> szukaj wszystko
+    # mode 1 -> szukaj tylko alegro
+    # mode 2 -> szukaj wszystko tylko nie allegro
     name = name
     page = page
-    cenneo_url = f"https://www.ceneo.pl/Dla_dziecka;szukaj-{name};0020-30-0-0-{page}.htm"
-    resp = requests.get(cenneo_url)
-    print(resp)
-    soup = BeautifulSoup(resp.text, 'lxml')
-    toy_cards = soup.find_all('div', class_="cat-prod-row js_category-list-item js_clickHashData js_man-track-event")
-
+    mode = mode
+    sort_by_num_shops = sort_by_num_shops
     toy_list = []
+    if mode == 0 or mode == 2:
+        cenneo_url = f"https://www.ceneo.pl/Dla_dziecka;szukaj-{name};0020-30-0-0-{page}.htm"
+        resp = requests.get(cenneo_url)
+        print(resp)
+        soup = BeautifulSoup(resp.text, 'html.parser')
+        toy_cards = soup.find_all('div',
+                                  class_="cat-prod-row js_category-list-item js_clickHashData js_man-track-event")
+    elif mode == 1:
+        cenneo_url = f"https://www.ceneo.pl/Dla_dziecka;szukaj-{name};20136-0v.htm"
+        resp = requests.get(cenneo_url)
+        print(resp)
+        soup = BeautifulSoup(resp.text, 'html.parser')
+        toy_cards = soup.find_all('div',
+                                  class_="cat-prod-row js_category-list-item js_clickHashData js_man-track-event js_substitute")
 
     for item in toy_cards:
         toy_name = item.get('data-productname')
@@ -82,22 +106,22 @@ def scraper(name, page=1):
         toy_price = float(item.get('data-productminprice'))
         toy_manufacturer = item.get('data-brand')
         toy_photo_url = item.find('img').get('data-original')
-        toy = Toy(name=toy_name, id=toy_id, min_price=toy_price, manufacturer=toy_manufacturer, shop_num=None, photo_url=toy_photo_url)
-        toy.getShopInfo()
-        toy_list.append(toy)
-
-    toy_list = sorted(toy_list, key=operator.attrgetter("min_price"))
-
-
+        toy = Toy(name=toy_name, id=toy_id, min_price=toy_price, manufacturer=toy_manufacturer, shop_num=0, photo_url=toy_photo_url)
+        toy.getShopInfo(mode)
+        if toy.shop_num != 0:
+            toy_list.append(toy)
+    if sort_by_num_shops:
+        toy_list = sorted(toy_list, key=operator.attrgetter("shop_num"), reverse=True)
+    else:
+        toy_list = sorted(toy_list, key=operator.attrgetter("min_price"))
 
     return toy_list
-
 
 if __name__ == "__main__":
     db = Database()
     db.create_tables()
 
-    toylist = scraper("samochod")
+    toylist = scraper("chudy", mode=0, sort_by_num_shops=True)
     for toy in toylist:
         print(toy)
         ToysResource(db).add_toy(toy.id, toy.name, toy.min_price, toy.manufacturer, toy.shop_num, toy.photo_url)
@@ -107,3 +131,11 @@ if __name__ == "__main__":
         print("############_________###############")
 
     db.close_connection()
+
+# if __name__ == "__main__":
+#     toylist = scraper("chudy", mode=0, sort_by_num_shops=False)
+#     for toy in toylist:
+#         print(toy)
+#         for shop in toy.shop_list:
+#             print(shop)
+#         print("############_________###############")

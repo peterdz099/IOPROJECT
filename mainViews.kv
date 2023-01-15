@@ -1,22 +1,85 @@
 <MainWindow>:
     name: "main"
-
     FloatLayout:
+        orientation: 'vertical'
 
-        orientation: "vertical"
-        size: root.width, root.height
-        canvas.before:
-            Rectangle
-                pos: self.pos
-                size: self.size
-                source: 'resources/background.png'
 
-        MDFillRoundFlatButton:
-            text: "Submit"
-            font_size: 16
-            size_hint: 0.6, 0.10
-            pos_hint:{"x":0.2,"y":0.26}
-            md_bg_color: "#2c4591"
-            on_release:
-                app.root.current ="login"
-                root.manager.transition.direction = "right"
+
+    MDBottomNavigation:
+        #color stuff
+        #panel_color: 0,0,1,1
+
+        MDBottomNavigationItem:
+            name: 'screen 1'
+            text: "Python"
+            icon: 'language-python'
+
+            MDFloatLayout:
+                md_bg_color: 1,1,1,1
+
+                MDLabel:
+                    text: "Find your dream toy!"
+                    font_size: 14
+                    halign: 'center'
+                    pos_hint:{"x": 0,"y": 0.1}
+
+                Image:
+                    source: 'resources/big ball.png'
+                    size_hint: 1,1
+                    pos_hint:{"x": -0.3,"y":-0.05}
+                Image:
+                    source: 'resources/big ball.png'
+                    size_hint: 1,1
+                    pos_hint:{"x": 0.4,"y":0.4}
+                Image:
+                    source: 'resources/big ball.png'
+                    size_hint: 1,1
+                    pos_hint:{"x": 0.4,"y": -0.4}
+
+                MDTextField:
+                    id: search
+                    halign: "center"
+                    valign: "center"
+                    mode: "rectangle"
+                    bg_color: 0,0,0,1
+                    multiline: False
+                    size_hint: 0.7, 0.12
+                    pos_hint:{"x": 0.15,"y": 0.45}
+
+                MDFillRoundFlatButton:
+                    text: "Search"
+                    font_size: 16
+                    size_hint: 0.6, 0.10
+                    pos_hint:{"x":0.2,"y":0.26}
+                    md_bg_color: "#2c4591"
+                    on_release:
+                        #root.login()
+                        #root.reset()
+                        root.manager.transition.direction = "left"
+
+
+        MDBottomNavigationItem:
+            name: 'screen 2'
+            text: "Youtube"
+            icon: 'youtube'
+
+            MDLabel:
+
+                halign: 'center'
+
+
+        MDBottomNavigationItem:
+            name: 'screen 3'
+            text: "Instagram"
+            icon: 'instagram'
+
+            MDLabel:
+
+                halign: 'center'
+
+
+
+
+
+
+

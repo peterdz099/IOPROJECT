@@ -100,7 +100,7 @@ class MyApp(MDApp):
         sm.add_widget(LoginWindow(name="login"))
         sm.add_widget(RegisterWindow(name="register"))
         sm.add_widget(MainWindow(name="main"))
-        sm.current = "login"
+        sm.current = "main"
 
         return sm
 

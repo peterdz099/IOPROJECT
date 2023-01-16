@@ -55,25 +55,42 @@
                             on_release:
                                 screen_manager.current = 'screeen2'
                                 screen_manager.transition.direction = "down"
-                                root.change()
+                                root.search()
 
                     Screen:
                         name: "screeen2"
-                        background_color: 0,0,0,1
 
-                        MDLabel:
-                            text: "Find your dream toy!"
-                            font_size: 14
-                            halign: 'center'
-                            pos_hint:{"x": 0,"y": 0.1}
+                        MDTextField:
+                            id: set
+
+                            multiline : False
+                            halign: "center"
+                            valign: "center"
+                            mode: "rectangle"
+                            bg_color: 0,0,0,1
+                            multiline: False
+                            size_hint: 0.7, 0.12
+                            pos_hint:{"x": 0.15,"y": 0.85}
+
+                        MDCard:
+                            md_bg_color: 1,1,1,1
+                            orientation: "vertical"
+                            padding: "8dp"
+                            size_hint: 0.8, 0.8
+                            pos_hint: {"center_x": 0.5, "center_y": 0.43}
+
+                            ScrollView:
+                                MDList:
+                                    id: scroll
 
                         MDFloatingActionButton:
                             icon: "arrow-down-thick"
-                            icon_color: (0,0,0,1)
-                            pos_hint:{"x":0.80,"y":0.08}
+                            icon_color: (1,1,1,1)
+                            pos_hint:{"x":0.80,"y":0.04}
                             size_hint: 0.18, 0.1333
-                            md_bg_color: "#ffef75"
+                            md_bg_color: "#2c4591"
                             on_release:
+                                #root.clear()
                                 screen_manager.current = 'screeen1'
                                 screen_manager.transition.direction = "up"
 

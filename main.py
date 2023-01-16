@@ -1,3 +1,4 @@
+from kivymd.uix.list import OneLineListItem
 from validate_email_address import validate_email
 from kivy.lang import Builder
 from kivy.uix.screenmanager import ScreenManager, Screen
@@ -7,7 +8,7 @@ from kivymd.app import MDApp
 from database_handler.initialize_database import Database
 from database_handler.users import Users
 from database_handler.users import is_pwd_correct
-from usrHelper import UserHelper
+
 
 
 class LoginWindow(Screen):
@@ -20,6 +21,7 @@ class LoginWindow(Screen):
 
         if dictionary:
             if is_pwd_correct(self.password.text, dictionary.get('password')):
+                sm.get_screen("main").set_name(self.email.text)
                 self.reset()
                 sm.current = "main"
             else:
@@ -85,23 +87,43 @@ class RegisterWindow(Screen):
 
 class MainWindow(Screen):
 
-    def change(self):
+    def set_name(self,name):
+        self.ids.username.text = "You are logged as: " + name
+
+
+    def search(self):
         print(self.ids.find.text)
         self.ids.find.text = ''
-
 
     def back_to_login(self):
         self.reset()
         sm.current = "login"
 
+    def history(self):
+        for i in range(30):
+            self.ids.scroll_history.add_widget(OneLineListItem(text=f"ssssss: {i}"))
 
+    def cart(self):
+        for i in range(30):
+            self.ids.scroll_cart.add_widget(OneLineListItem(text=f"ssssss: {i}"))
+
+    def search(self):
+        print(self.ids.find.text)
+        for i in range(30):
+            self.ids.scroll.add_widget(OneLineListItem(text=f"ssssss: {i}"))
+        self.ids.set.text = "Findings of: " + self.ids.find.text
 
 class WithoutLoginWindow(Screen):
 
-    def change(self):
+    def search(self):
         print(self.ids.find.text)
+        for i in range(30):
+            self.ids.scroll.add_widget(OneLineListItem(text=f"ssssss: {i}"))
+        self.ids.set.text = "Findings of: " + self.ids.find.text
         self.ids.find.text = ''
 
+    def clear(self):
+        pass
 
 
 class WindowManager(ScreenManager):
@@ -113,8 +135,9 @@ db = Database()
 usersResources = Users(db)
 db.create_tables()
 
-user = UserHelper("pitok")
-#!!!!!!!!!!!!!!!!!!!!!!
+
+
+# !!!!!!!!!!!!!!!!!!!!!!
 
 
 class MyApp(MDApp):
@@ -128,11 +151,10 @@ class MyApp(MDApp):
         Builder.load_file('noLogin.kv')
         sm.add_widget(WithoutLoginWindow(name="without"))
 
-
         Builder.load_file('mainViews.kv')
         sm.add_widget(MainWindow(name="main"))
 
-        sm.current = "main"
+        sm.current = "login"
 
         return sm
 

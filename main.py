@@ -1,4 +1,4 @@
-from kivymd.uix.list import OneLineListItem
+from kivymd.uix.list import OneLineListItem, ThreeLineAvatarIconListItem
 from validate_email_address import validate_email
 from kivy.lang import Builder
 from kivy.uix.screenmanager import ScreenManager, Screen
@@ -8,7 +8,6 @@ from kivymd.app import MDApp
 from database_handler.initialize_database import Database
 from database_handler.users import Users
 from database_handler.users import is_pwd_correct
-
 
 
 class LoginWindow(Screen):
@@ -87,13 +86,8 @@ class RegisterWindow(Screen):
 
 class MainWindow(Screen):
 
-    def set_name(self,name):
+    def set_name(self, name):
         self.ids.username.text = "You are logged as: " + name
-
-
-    def search(self):
-        print(self.ids.find.text)
-        self.ids.find.text = ''
 
     def back_to_login(self):
         self.reset()
@@ -110,8 +104,9 @@ class MainWindow(Screen):
     def search(self):
         print(self.ids.find.text)
         for i in range(30):
-            self.ids.scroll.add_widget(OneLineListItem(text=f"ssssss: {i}"))
+            self.ids.scroll.add_widget(ThreeLineAvatarIconListItem(text="Single-line item with avatar", secondary_text="Secondary text here", tertiary_text= "fit more text than usual"))
         self.ids.set.text = "Findings of: " + self.ids.find.text
+
 
 class WithoutLoginWindow(Screen):
 
@@ -134,10 +129,6 @@ sm = WindowManager()
 db = Database()
 usersResources = Users(db)
 db.create_tables()
-
-
-
-# !!!!!!!!!!!!!!!!!!!!!!
 
 
 class MyApp(MDApp):

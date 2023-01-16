@@ -5,7 +5,6 @@ from bs4 import BeautifulSoup
 import requests
 from dataclasses import dataclass
 from database_handler.initialize_database import Database
-from database_handler.toys import Toys as ToysResource
 from database_handler.offers import Offers as OffersResource
 
 
@@ -124,10 +123,10 @@ if __name__ == "__main__":
     toylist = scraper("chudy", mode=0, sort_by_num_shops=True)
     for toy in toylist:
         print(toy)
-        ToysResource(db).add_toy(toy.id, toy.name, toy.min_price, toy.manufacturer, toy.shop_num, toy.photo_url)
         for shop in toy.shop_list:
             print(shop)
-            OffersResource(db).add_offer(shop.offer_id, shop.shop_url, toy.id, shop.id, shop.name, shop.price)
+            OffersResource(db).add_offer(shop.offer_id, toy.name, shop.price, shop.shop_url, shop.name,
+                                         toy.manufacturer, toy.photo_url)
         print("############_________###############")
 
     db.close_connection()

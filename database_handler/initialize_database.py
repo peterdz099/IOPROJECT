@@ -3,7 +3,6 @@ from mysql.connector import connect
 
 
 class Database:
-    
 
     def __init__(self):
         self._connection = None
@@ -40,32 +39,16 @@ class Database:
             cursor.execute(create_users_table_query)
             self._connection.commit()
 
-    def create_toys_table(self):
-        create_toys_table_query = """
-        CREATE TABLE IF NOT EXISTS toys (
-            id INT(11) NOT NULL PRIMARY KEY,
-            name VARCHAR(255),
-            min_price FLOAT(7,2),
-            manufacturer VARCHAR(255),
-            num_of_shops SMALLINT,
-            img_url VARCHAR(255)
-        )
-        """
-
-        with self._connection.cursor() as cursor:
-            cursor.execute(create_toys_table_query)
-            self._connection.commit()
-
     def create_offers_table(self):
         create_offers_table_query = """
         CREATE TABLE IF NOT EXISTS offers (
             id INT(11) NOT NULL PRIMARY KEY,
-            url VARCHAR(1024) NOT NULL UNIQUE,
-            toy_id INT(11) NOT NULL,
-            shop_id INT(11),
-            shop_name VARCHAR(255),
+            toy_name VARCHAR(255),
             price FLOAT(7,2),
-            FOREIGN KEY(toy_id) REFERENCES toys(id)
+            url VARCHAR(1024) NOT NULL UNIQUE,
+            shop_name VARCHAR(255),
+            manufacturer VARCHAR(255),
+            img_url VARCHAR(255)
         )
         """
 
@@ -103,7 +86,6 @@ class Database:
 
     def create_tables(self):
         self.create_users_table()
-        self.create_toys_table()
         self.create_offers_table()
         self.create_search_history_table()
         self.create_shopping_list_table()

@@ -51,8 +51,27 @@ class Users:
                 cursor.execute(select_user_query, user_args)
                 output = cursor.fetchone()
                 if output is not None:
-                    return {'id': output[0], 'username': output[1], 'email': output[2], 'password': output[3]}
+                    return {'id': output[0], 'username': output[1], 'email': output[2], 'password': output[3],
+                            'is_verified': output[4]}
                 else:
                     raise Error('No user found')
+        except Error as e:
+            print(e)
+
+    def verify_user(self, **user_fields):
+        verify_user_query = """
+                UPDATE users
+                SET is_verified = true
+                WHERE id = %s
+                OR username = %s
+                OR email = %s
+                """
+
+        user_args = (user_fields.get('id'), user_fields.get('username'), user_fields.get('email'))
+
+        try:
+            with self.connection.cursor() as cursor:
+                cursor.execute(verify_user_query, user_args)
+                self.connection.commit()
         except Error as e:
             print(e)

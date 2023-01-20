@@ -44,11 +44,11 @@ class Database:
         create_offers_table_query = """
         CREATE TABLE IF NOT EXISTS offers (
             id INT(11) NOT NULL PRIMARY KEY,
-            toy_name VARCHAR(255),
+            toy_name VARCHAR(100),
             price FLOAT(7,2),
-            url VARCHAR(1024) NOT NULL UNIQUE,
-            shop_name VARCHAR(255),
-            manufacturer VARCHAR(255),
+            url VARCHAR(760) NOT NULL UNIQUE,
+            shop_name VARCHAR(100),
+            manufacturer VARCHAR(100),
             img_url VARCHAR(255)
         )
         """

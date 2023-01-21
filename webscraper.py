@@ -1,9 +1,7 @@
+import json
 import operator
-import random
-
 from bs4 import BeautifulSoup
 import requests
-from dataclasses import dataclass
 from database_handler.initialize_database import Database
 from database_handler.offers import Offers as OffersResource
 
@@ -15,8 +13,8 @@ class Shop:
         self.price = price
         self.shop_url = 'ceneo.pl' + shop_url
         self.offer_id = offer_id
-        # self.deliver_method = deliver_method
-        # self.deliver_price = deliver_price
+        self.deliver_method = []
+        self.deliver_price = []
 
     def __str__(self):
         return f'name: {self.name}, ' \
@@ -73,7 +71,29 @@ class Toy:
                     shop_list.append(shop)
                     self.shop_num += 1
         self.shop_list = sorted(shop_list, key=operator.attrgetter('price'))
+        try:
+            error = False
+            deliveryURL = "https://www.ceneo.pl/Product/GetOfferDetails?data=" + shop_list[0].shop_url.split("?e=")[1]
 
+        except:
+            error = True
+        if error == False:
+            json_data = requests.get(deliveryURL).text
+            parsed = json.loads(json_data)
+            deliver_html = parsed["ProductDetailsAdditionalPartial"]
+            delivery_soup = BeautifulSoup(deliver_html, 'html.parser')
+            deliveries = delivery_soup.find_all(
+                "li",
+                class_="product-offer-details__additional__delivery-costs__list__item",
+            )
+
+            for deliver in deliveries:
+                 for item in deliver.find_all("li"):
+                    productPrice = item.get_text()
+                    deliveryInfo = productPrice.replace('\n', '').split("zł")
+                    if len(deliveryInfo) > 1:
+                        shop_list[0].deliver_price.append(float(deliveryInfo[0].replace(",", ".")))
+                        shop_list[0].deliver_method.append(deliveryInfo[1])
 
 def scraper(name, mode=0, page=1, sort_by_num_shops=False):
     # mode 0 -> szukaj wszystko
@@ -116,25 +136,27 @@ def scraper(name, mode=0, page=1, sort_by_num_shops=False):
 
     return toy_list
 
-if __name__ == "__main__":
-    db = Database()
-    db.create_tables()
-
-    toylist = scraper("chudy", mode=0, sort_by_num_shops=True)
-    for toy in toylist:
-        print(toy)
-        for shop in toy.shop_list:
-            print(shop)
-            OffersResource(db).add_offer(shop.offer_id, toy.name, shop.price, shop.shop_url, shop.name,
-                                         toy.manufacturer, toy.photo_url)
-        print("############_________###############")
-
-    db.close_connection()
-
 # if __name__ == "__main__":
-#     toylist = scraper("chudy", mode=0, sort_by_num_shops=False)
+#     db = Database()
+#     db.create_tables()
+#
+#     toylist = scraper("chudy", mode=0, sort_by_num_shops=True)
 #     for toy in toylist:
 #         print(toy)
 #         for shop in toy.shop_list:
 #             print(shop)
+#             OffersResource(db).add_offer(shop.offer_id, toy.name, shop.price, shop.shop_url, shop.name,
+#                                          toy.manufacturer, toy.photo_url)
 #         print("############_________###############")
+#
+#     db.close_connection()
+
+if __name__ == "__main__":
+    toylist = scraper("chudy", mode=2, sort_by_num_shops=True)
+    for toy in toylist:
+        print(toy)
+        for shop in toy.shop_list:
+            print(shop)
+            print(shop.deliver_method)
+            print(shop.deliver_price)
+        print("############_________###############")

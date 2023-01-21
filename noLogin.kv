@@ -15,7 +15,12 @@
                     id: screen_manager
                     Screen:
                         name: "screeen1"
-                        md_bg_color: 1,1,1,1
+                        canvas:
+                            Color:
+                                rgba: 1, 1, 1, 1
+                            Rectangle:
+                                size: self.size
+                                pos: self.pos
 
                         MDLabel:
                             text: "Find your dream toy!"
@@ -53,16 +58,28 @@
                             pos_hint:{"x":0.2,"y":0.26}
                             md_bg_color: "#2c4591"
                             on_release:
-                                screen_manager.current = 'screeen2'
+
                                 screen_manager.transition.direction = "down"
                                 root.search()
+
+                        Button:
+                            text: "Back to Login"
+                            underline: True
+                            font_size: 13
+                            size_hint: 0.6, 0.10
+                            pos_hint:{"x":0.2,"y":0.02}
+                            background_color: (133/255,225/255,189/255,0)
+                            color: (92/255, 94/255, 94/255,1)
+                            on_release:
+                                root.manager.current = "login"
+                                root.manager.transition.direction = "right"
 
                     Screen:
                         name: "screeen2"
 
                         MDTextField:
                             id: set
-
+                            disabled: True
                             multiline : False
                             halign: "center"
                             valign: "center"

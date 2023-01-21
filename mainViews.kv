@@ -58,10 +58,11 @@
                             md_bg_color: "#2c4591"
                             on_release:
                                 root.search()
-                                screen_manager.current = 'screeen2'
+                                root.clear_search()
                                 screen_manager.transition.direction = "down"
 
                     Screen:
+                        id: s2
                         name: "screeen2"
 
                         MDTextField:
@@ -85,8 +86,8 @@
                             ScrollView:
                                 MDList:
                                     id: scroll
-                                    OneLineListItem:
-                                        text:"dupa"
+
+
 
                         MDFloatingActionButton:
                             icon: "arrow-down-thick"
@@ -95,7 +96,7 @@
                             size_hint: 0.18, 0.1333
                             md_bg_color: "#2c4591"
                             on_release:
-                                screen_manager.current = 'screeen1'
+                                root.clear_findings()
                                 screen_manager.transition.direction = "up"
 
 
@@ -127,8 +128,7 @@
                 ScrollView:
                     MDList:
                         id: scroll_cart
-                        OneLineListItem:
-                            text: "dupa"
+
                
         MDBottomNavigationItem:
             name: 'screen 3'

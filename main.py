@@ -89,9 +89,28 @@ class MainWindow(Screen):
     def set_name(self, name):
         self.ids.username.text = "You are logged as: " + name
 
+    def clear_findings(self, *args):
+        self.ids.scroll.clear_widgets()
+        self.ids.screen_manager.current = "screeen1"
+        pass
+
+    def clear_search(self):
+        self.ids.find.text = ""
+
+    def clear_history(self):
+        self.ids.scroll_history.clear_widgets()
+
+    def clear_basket(self):
+        self.ids.scroll_cart.clear_widgets()
+
     def back_to_login(self):
         self.reset()
         sm.current = "login"
+
+    def reset(self):
+        self.clear_search()
+        self.clear_basket()
+        self.clear_history()
 
     def history(self):
         for i in range(30):
@@ -102,22 +121,37 @@ class MainWindow(Screen):
             self.ids.scroll_cart.add_widget(OneLineListItem(text=f"ssssss: {i}"))
 
     def search(self):
+
         print(self.ids.find.text)
-        for i in range(30):
-            self.ids.scroll.add_widget(ThreeLineAvatarIconListItem(text="Single-line item with avatar", secondary_text="Secondary text here", tertiary_text= "fit more text than usual"))
-        self.ids.set.text = "Findings of: " + self.ids.find.text
+        s = self.ids.find.text
+
+        if any(c.isalpha() for c in s):
+            self.ids.screen_manager.current = "screeen2"
+            for i in range(4):
+                self.ids.scroll.add_widget(ThreeLineAvatarIconListItem(text=self.ids.find.text, secondary_text="Secondary text here", tertiary_text= "fit more text than usual"))
+            self.ids.set.text = "Findings of: " + self.ids.find.text
+        else:
+            "EMPTY"
 
 
 class WithoutLoginWindow(Screen):
 
     def search(self):
+
         print(self.ids.find.text)
-        for i in range(30):
-            self.ids.scroll.add_widget(OneLineListItem(text=f"ssssss: {i}"))
-        self.ids.set.text = "Findings of: " + self.ids.find.text
-        self.ids.find.text = ''
+        s = self.ids.find.text
+
+        if any(c.isalpha() for c in s):
+            self.ids.screen_manager.current = "screeen2"
+            for i in range(4):
+                self.ids.scroll.add_widget(ThreeLineAvatarIconListItem(text=self.ids.find.text, secondary_text="Secondary text here", tertiary_text= "fit more text than usual"))
+            self.ids.set.text = "Findings of: " + self.ids.find.text
+        else:
+            self.ids.find.text = ""
+            print("EMPTY")
 
     def clear(self):
+
         pass
 
 

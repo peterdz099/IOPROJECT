@@ -14,7 +14,6 @@ class Shop:
         self.shop_url = 'ceneo.pl' + shop_url
         self.offer_id = offer_id
         self.deliver_method = []
-        self.deliver_price = []
 
     def __str__(self):
         return f'name: {self.name}, ' \
@@ -92,8 +91,10 @@ class Toy:
                     productPrice = item.get_text()
                     deliveryInfo = productPrice.replace('\n', '').split("zł")
                     if len(deliveryInfo) > 1:
-                        shop_list[0].deliver_price.append(float(deliveryInfo[0].replace(",", ".")))
-                        shop_list[0].deliver_method.append(deliveryInfo[1])
+                        line = []
+                        line.append(float(deliveryInfo[0].replace(",", ".")))
+                        line.append(deliveryInfo[1])
+                        shop_list[0].deliver_method.append(line)
 
 def scraper(name, mode=0, page=1, sort_by_num_shops=False):
     # mode 0 -> szukaj wszystko
@@ -156,7 +157,5 @@ if __name__ == "__main__":
     for toy in toylist:
         print(toy)
         for shop in toy.shop_list:
-            print(shop)
             print(shop.deliver_method)
-            print(shop.deliver_price)
         print("############_________###############")

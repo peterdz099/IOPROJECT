@@ -1,15 +1,19 @@
-from kivymd.uix.list import OneLineListItem, ThreeLineAvatarIconListItem
+from kivymd.uix.list import OneLineListItem, ThreeLineAvatarIconListItem, TwoLineAvatarListItem, ImageLeftWidget
 from validate_email_address import validate_email
 from kivy.lang import Builder
 from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.config import Config
 from kivy.properties import ObjectProperty
 from kivymd.app import MDApp
+
+import webscraper
 from database_handler.initialize_database import Database
 from database_handler.users import Users
 from database_handler.users import is_pwd_correct
 import random
 
+
+allegro_mode=0
 
 class VerifyWindow(Screen):
     generated_code = ""
@@ -46,7 +50,7 @@ class LoginWindow(Screen):
 
         dictionary = usersResources.select_user(email=self.email.text, username=self.email.text)
 
-        if dictionary and dictionary.get('is_verified') == 1:
+        if dictionary:
             if is_pwd_correct(self.password.text, dictionary.get('password')):
                 sm.get_screen("main").set_name(self.email.text)
                 self.reset()
@@ -122,7 +126,7 @@ class MainWindow(Screen):
     def set_name(self, name):
         self.ids.username.text = "You are logged as: " + name
 
-    def clear_findings(self):
+    def clear_findings(self, *args):
         self.ids.scroll.clear_widgets()
         self.ids.screen_manager.current = "screeen1"
         pass
@@ -154,40 +158,61 @@ class MainWindow(Screen):
             self.ids.scroll_cart.add_widget(OneLineListItem(text=f"ssssss: {i}"))
 
     def search(self):
+
         print(self.ids.find.text)
         s = self.ids.find.text
 
         if any(c.isalpha() for c in s):
             self.ids.screen_manager.current = "screeen2"
             for i in range(4):
-                self.ids.scroll.add_widget(ThreeLineAvatarIconListItem(text=self.ids.find.text,
-                                                                       secondary_text="Secondary text here",
-                                                                       tertiary_text="fit more text than usual"))
-
+                self.ids.scroll.add_widget(ThreeLineAvatarIconListItem(text=self.ids.find.text, secondary_text="Secondary text here", tertiary_text= "fit more text than usual"))
             self.ids.set.text = "Findings of: " + self.ids.find.text
         else:
-            print("EMPTY")
+            "EMPTY"
 
 
 class WithoutLoginWindow(Screen):
 
-    def search(self):
+    allegro_mode = 0
 
+    def on_checkbox_active(self, checkbox, value):
+        if value:
+            allegro_mode=0
+        else:
+            pass
+    def on_checkbox_active2(self, checkbox, value):
+        if value:
+            allegro_mode=1
+        else:
+            pass
+
+    def on_checkbox_active3(self, checkbox, value):
+        if value:
+            allegro_mode=2
+        else:
+                pass
+
+    def search(self):
         print(self.ids.find.text)
         s = self.ids.find.text
+        toy_list = webscraper.scraper(s, allegro_mode)
 
         if any(c.isalpha() for c in s):
             self.ids.screen_manager.current = "screeen2"
             for i in range(4):
-                self.ids.scroll.add_widget(
-                    ThreeLineAvatarIconListItem(text=self.ids.find.text, secondary_text="Secondary text here",
-                                                tertiary_text="fit more text than usual"))
+                self.ids.scroll.add_widget(TwoLineAvatarListItem(
+                    ImageLeftWidget(
+                        source=f"https:{toy_list[i].photo_url}"),
+                    text=toy_list[i].name, secondary_text=f"https://www.ceneo.pl/{toy_list[i].id}",
+                    on_release=lambda x: self.changeScreen(self)
+                ))
             self.ids.set.text = "Findings of: " + self.ids.find.text
         else:
             self.ids.find.text = ""
             print("EMPTY")
 
     def clear(self):
+
         pass
 
 

@@ -1,3 +1,9 @@
+
+<Check@MDCheckbox>:
+    group: 'group'
+    size_hint: None, None
+    size: dp(48), dp(48)
+
 <WithoutLoginWindow>:
     name: "without"
 
@@ -24,7 +30,7 @@
                             text: "Find your dream toy!"
                             font_size: 14
                             halign: 'center'
-                            pos_hint:{"x": 0,"y": 0.1}
+                            pos_hint:{"x": 0,"y": 0.3}
 
                         Image:
                             source: 'resources/big ball.png'
@@ -39,6 +45,35 @@
                             size_hint: 1,1
                             pos_hint:{"x": 0.4,"y": -0.4}
 
+                        Check:
+                            active: True
+                            pos_hint: {'center_x': .8, 'center_y': .52}
+                            on_active: root.allegro_mode=0
+                        MDLabel:
+                            text: "W KAŻDYM SKLEPIE"
+                            font_size: 16
+                            halign: 'left'
+                            pos_hint:{"x": 0.18,'center_y': .52}
+
+                        Check:
+                            pos_hint: {'center_x': .8, 'center_y': .42}
+                            on_active: root.allegro_mode=1
+                        MDLabel:
+                            text: "TYLKO ALLEGRO"
+                            font_size: 16
+                            halign: 'left'
+                            pos_hint:{"x": 0.18,'center_y': .42}
+
+                        Check:
+                            pos_hint: {'center_x': .8, 'center_y': .32}
+                            on_active: root.allegro_mode=2
+                        MDLabel:
+                            text: "WSZYSTKO POZA ALLEGRO"
+                            font_size: 16
+                            halign: 'left'
+                            pos_hint:{"x": 0.18,'center_y': .32}
+
+
                         MDTextField:
                             id: find
                             halign: "center"
@@ -47,13 +82,13 @@
                             bg_color: 0,0,0,1
                             multiline: False
                             size_hint: 0.7, 0.12
-                            pos_hint:{"x": 0.15,"y": 0.45}
+                            pos_hint:{"x": 0.15,"y": 0.6}
 
                         MDFillRoundFlatButton:
                             text: "Search"
                             font_size: 16
                             size_hint: 0.6, 0.10
-                            pos_hint:{"x":0.2,"y":0.26}
+                            pos_hint:{"x":0.2,"y":0.15}
                             md_bg_color: "#2c4591"
                             on_release:
 

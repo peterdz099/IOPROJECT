@@ -96,7 +96,7 @@ class Toy:
                         line.append(deliveryInfo[1])
                         shop_list[0].deliver_method.append(line)
 
-def scraper(name, mode=0, page=1, sort_by_num_shops=False):
+def scraper(name, mode, page=1, sort_by_num_shops=False):
     # mode 0 -> szukaj wszystko
     # mode 1 -> szukaj tylko alegro
     # mode 2 -> szukaj wszystko tylko nie allegro

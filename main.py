@@ -11,6 +11,7 @@ from database_handler.initialize_database import Database
 from database_handler.users import Users
 from database_handler.users import is_pwd_correct
 import random
+from file_manager import load_file_and_save_to_excel
 
 
 allegro_mode=0
@@ -170,6 +171,8 @@ class MainWindow(Screen):
         else:
             "EMPTY"
 
+    def handle_import_button_pressed(self):
+        load_file_and_save_to_excel()
 
 class WithoutLoginWindow(Screen):
 

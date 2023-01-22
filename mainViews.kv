@@ -143,6 +143,8 @@
                     size_hint: 0.6, 0.10
                     pos_hint:{"x":0.2,"y":0.26}
                     md_bg_color: "#2c4591"
+                    on_release:
+                        root.handle_import_button_pressed()
 
         MDBottomNavigationItem:
             name: 'screen 3'

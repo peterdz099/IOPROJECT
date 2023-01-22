@@ -14,7 +14,7 @@ def load_file_and_save_to_excel():
     offer_list = []
     for search in list:
         search = search.replace(' ','+')
-        ws = scraper(search)
+        ws = scraper(search,0)
         ws.sort(key=lambda t: t.min_price)
         offer_list.append(ws[0])
     df = pd.DataFrame([delete_columns(vars(s)) for s in offer_list])

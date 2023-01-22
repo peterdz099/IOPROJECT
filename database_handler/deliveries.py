@@ -2,43 +2,43 @@ from database_handler.initialize_database import Database
 from mysql.connector import Error
 
 
-class ShoppingList:
+class Deliveries:
     def __init__(self, database: Database):
         self.connection = database.get_connection()
 
-    def add_shopping_list(self, user_id, offer_id):
-        insert_shopping_list_query = """
-                INSERT INTO shopping_list
-                (user_id, offer_id) 
-                VALUES (%s, %s)
+    def add_delivery(self, price, deliverer, offer_id):
+        insert_delivery_query = """
+                INSERT INTO deliveries
+                (price, deliverer, offer_id) 
+                VALUES (%s, %s, %s)
                 """
 
-        shopping_list_record = (user_id, offer_id)
+        delivery_record = (price, deliverer, offer_id)
 
         try:
             with self.connection.cursor() as cursor:
-                cursor.execute(insert_shopping_list_query, shopping_list_record)
+                cursor.execute(insert_delivery_query, delivery_record)
                 self.connection.commit()
         except Error as e:
             print(e)
 
-    def select_shopping_list(self, user_id) -> list[dict]:
-        select_shopping_list_query = """
-                        SELECT * FROM shopping_list
-                        WHERE user_id = %s
+    def select_deliveries(self, offer_id) -> list[dict]:
+        select_deliveries_query = """
+                        SELECT * FROM deliveries
+                        WHERE offer_id = %s
                         """
 
         try:
             with self.connection.cursor() as cursor:
-                cursor.execute(select_shopping_list_query, (user_id,))
+                cursor.execute(select_deliveries_query, (offer_id,))
                 output = []
                 fetched_records = cursor.fetchall()
                 if fetched_records is not None:
                     for row in fetched_records:
-                        record = {'user_id': row[0], 'offer_id': row[1]}
+                        record = {'price': row[0], 'deliverer': row[1], 'offer_id': row[2]}
                         output.append(record)
                     return output
                 else:
-                    raise Error('No shopping list found')
+                    raise Error('No delivery found')
         except Error as e:
             print(e)

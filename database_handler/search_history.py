@@ -22,7 +22,7 @@ class SearchHistory:
         except Error as e:
             print(e)
 
-    def select_search_history(self, user_id) -> list:
+    def select_search_history(self, user_id) -> list[dict]:
         select_search_history_query = """
                         SELECT * FROM search_history
                         WHERE user_id = %s

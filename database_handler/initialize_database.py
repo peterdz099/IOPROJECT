@@ -85,8 +85,23 @@ class Database:
             cursor.execute(create_shopping_list_table_query)
             self._connection.commit()
 
+    def create_deliveries_table(self):
+        create_deliveries_table_query = """
+            CREATE TABLE IF NOT EXISTS deliveries (
+                price FLOAT(7,2),
+                deliverer VARCHAR(255),
+                offer_id INT(11),
+                FOREIGN KEY(offer_id) REFERENCES offers(id)
+            )
+            """
+
+        with self._connection.cursor() as cursor:
+            cursor.execute(create_deliveries_table_query)
+            self._connection.commit()
+
     def create_tables(self):
         self.create_users_table()
         self.create_offers_table()
         self.create_search_history_table()
         self.create_shopping_list_table()
+        self.create_deliveries_table()

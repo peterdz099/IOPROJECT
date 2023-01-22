@@ -144,3 +144,25 @@
                                 screen_manager.current = 'screeen1'
                                 screen_manager.transition.direction = "up"
 
+                    Screen:
+                        name: "screeen3"
+
+                        MDTextField:
+                            id: set
+                            disabled: True
+                            multiline : False
+                            halign: "center"
+                            valign: "center"
+                            mode: "rectangle"
+                            bg_color: 0,0,0,1
+                            multiline: False
+                            size_hint: 0.7, 0.12
+                            pos_hint:{"x": 0.15,"y": 0.85}
+
+                        MDCard:
+                            md_bg_color: 1,1,1,1
+                            orientation: "vertical"
+                            padding: "8dp"
+                            size_hint: 0.8, 0.8
+                            pos_hint: {"center_x": 0.5, "center_y": 0.43}
+

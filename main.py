@@ -175,22 +175,6 @@ class WithoutLoginWindow(Screen):
 
     allegro_mode = 0
 
-    def on_checkbox_active(self, checkbox, value):
-        if value:
-            allegro_mode=0
-        else:
-            pass
-    def on_checkbox_active2(self, checkbox, value):
-        if value:
-            allegro_mode=1
-        else:
-            pass
-
-    def on_checkbox_active3(self, checkbox, value):
-        if value:
-            allegro_mode=2
-        else:
-                pass
 
     def search(self):
         print(self.ids.find.text)
@@ -204,7 +188,7 @@ class WithoutLoginWindow(Screen):
                     ImageLeftWidget(
                         source=f"https:{toy_list[i].photo_url}"),
                     text=toy_list[i].name, secondary_text=f"https://www.ceneo.pl/{toy_list[i].id}",
-                    on_release=lambda x: self.changeScreen(self)
+                    on_release=lambda x: self.to_product(toy_list[i])
                 ))
             self.ids.set.text = "Findings of: " + self.ids.find.text
         else:
@@ -214,7 +198,8 @@ class WithoutLoginWindow(Screen):
     def clear(self):
 
         pass
-
+    def to_product(self, num):
+        self.ids.screen_manager.current = "screeen3"
 
 class WindowManager(ScreenManager):
     pass

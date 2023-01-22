@@ -7,3 +7,4 @@ Kivy~=2.1.0
 kivymd~=1.1.1
 validate-email-address~=1
 py3dns~=3.2.1
+pandas~=1.5.3

@@ -174,6 +174,7 @@ class MainWindow(Screen):
     def handle_import_button_pressed(self):
         offer_list = load_file_and_save_to_csv()
 
+
 class WithoutLoginWindow(Screen):
 
     allegro_mode = 0
@@ -199,8 +200,8 @@ class WithoutLoginWindow(Screen):
             print("EMPTY")
 
     def clear(self):
-
         pass
+
     def to_product(self, num):
         self.ids.screen_manager.current = "screeen3"
 

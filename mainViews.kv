@@ -4,8 +4,7 @@
         orientation: 'vertical'
 
     MDBottomNavigation:
-        #color stuff
-        #panel_color: 0,0,1,1
+
 
         MDBottomNavigationItem:
             name: 'screen 1'
@@ -99,9 +98,14 @@
                                 root.clear_findings()
                                 screen_manager.transition.direction = "up"
 
-
         MDBottomNavigationItem:
             name: 'screen 2'
+            text: "Cart"
+            icon: 'cart'
+            load_func : root.cart()
+
+        MDBottomNavigationItem:
+            name: 'screen 3'
             text: "Cart"
             icon: 'cart'
             load_func : root.cart()
@@ -131,7 +135,7 @@
 
                
         MDBottomNavigationItem:
-            name: 'screen 3'
+            name: 'screen 4'
             text: "History"  
             icon: 'history'
             load_func : root.history()
@@ -162,7 +166,7 @@
                             text: "dupa"
 
         MDBottomNavigationItem:
-            name: 'screen 4'
+            name: 'screen 5'
             text: "Profile"
             icon: 'account-box'
             

@@ -1,0 +1,63 @@
+<VerifyWindow>:
+    name: "verify"
+    canvas:
+        Color:
+            rgba: 1, 1, 1, 1
+        Rectangle:
+            size: self.size
+            pos: self.pos
+
+    FloatLayout:
+
+        MDLabel:
+            text: "Verify your account :) \n Use full version of the product!"
+            font_size: 14
+            halign: 'center'
+            pos_hint:{"x": 0,"y": 0.14}
+
+        Image:
+            source: 'resources/big ball.png'
+            size_hint: 1,1
+            pos_hint:{"x": -0.3,"y":-0.05}
+        Image:
+            source: 'resources/big ball.png'
+            size_hint: 1,1
+            pos_hint:{"x": 0.4,"y":0.4}
+        Image:
+            source: 'resources/big ball.png'
+            size_hint: 1,1
+            pos_hint:{"x": 0.4,"y": -0.4}
+
+        MDTextField:
+            id: code
+            halign: "center"
+            valign: "center"
+            mode: "rectangle"
+            bg_color: 0,0,0,1
+            multiline: False
+            size_hint: 0.7, 0.12
+            pos_hint:{"x": 0.15,"y": 0.45}
+
+        MDFillRoundFlatButton:
+            text: "Search"
+            font_size: 16
+            size_hint: 0.6, 0.10
+            pos_hint:{"x":0.2,"y":0.26}
+            md_bg_color: "#2c4591"
+            on_release:
+
+                root.verify()
+               
+        Button:
+            text: "Back to Login"
+            underline: True
+            font_size: 13
+            size_hint: 0.6, 0.10
+            pos_hint:{"x":0.2,"y":0.02}
+            background_color: (133/255,225/255,189/255,0)
+            color: (92/255, 94/255, 94/255,1)
+            on_release:
+                #root.manager.current = "login"
+                root.send_email() 
+                root.reset()
+                root.manager.transition.direction = "right"

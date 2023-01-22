@@ -8,6 +8,34 @@ from kivymd.app import MDApp
 from database_handler.initialize_database import Database
 from database_handler.users import Users
 from database_handler.users import is_pwd_correct
+import random
+
+
+class VerifyWindow(Screen):
+    generated_code = ""
+    email_or_username = ""
+
+    @staticmethod
+    def set_user(email):
+        VerifyWindow.email_or_username = email
+
+    def verify(self):
+        if self.ids.code.text == VerifyWindow.generated_code:
+            print('success')
+            usersResources.verify_user(email=VerifyWindow.email_or_username, username=VerifyWindow.email_or_username)
+            sm.current = "login"
+            self.reset()
+
+    @staticmethod
+    def send_email():
+        code = random.randint(100000, 1000000)
+        VerifyWindow.generated_code = str(code)
+        print(code)
+
+    def reset(self):
+        self.ids.code.text = ""
+        VerifyWindow.generated_code = None
+        VerifyWindow.email_or_username = ""
 
 
 class LoginWindow(Screen):
@@ -18,13 +46,18 @@ class LoginWindow(Screen):
 
         dictionary = usersResources.select_user(email=self.email.text, username=self.email.text)
 
-        if dictionary:
+        if dictionary and dictionary.get('is_verified') == 1:
             if is_pwd_correct(self.password.text, dictionary.get('password')):
                 sm.get_screen("main").set_name(self.email.text)
                 self.reset()
                 sm.current = "main"
             else:
                 print("BAD PASSWORD")
+        elif dictionary and dictionary.get('is_verified') == 0:
+            sm.get_screen("verify").set_user(self.email.text)
+            sm.get_screen("verify").send_email()
+            self.reset()
+            sm.current = "verify"
         else:
             print("NOT USER FOUND")
 
@@ -89,7 +122,7 @@ class MainWindow(Screen):
     def set_name(self, name):
         self.ids.username.text = "You are logged as: " + name
 
-    def clear_findings(self, *args):
+    def clear_findings(self):
         self.ids.scroll.clear_widgets()
         self.ids.screen_manager.current = "screeen1"
         pass
@@ -121,17 +154,19 @@ class MainWindow(Screen):
             self.ids.scroll_cart.add_widget(OneLineListItem(text=f"ssssss: {i}"))
 
     def search(self):
-
         print(self.ids.find.text)
         s = self.ids.find.text
 
         if any(c.isalpha() for c in s):
             self.ids.screen_manager.current = "screeen2"
             for i in range(4):
-                self.ids.scroll.add_widget(ThreeLineAvatarIconListItem(text=self.ids.find.text, secondary_text="Secondary text here", tertiary_text= "fit more text than usual"))
+                self.ids.scroll.add_widget(ThreeLineAvatarIconListItem(text=self.ids.find.text,
+                                                                       secondary_text="Secondary text here",
+                                                                       tertiary_text="fit more text than usual"))
+
             self.ids.set.text = "Findings of: " + self.ids.find.text
         else:
-            "EMPTY"
+            print("EMPTY")
 
 
 class WithoutLoginWindow(Screen):
@@ -144,14 +179,15 @@ class WithoutLoginWindow(Screen):
         if any(c.isalpha() for c in s):
             self.ids.screen_manager.current = "screeen2"
             for i in range(4):
-                self.ids.scroll.add_widget(ThreeLineAvatarIconListItem(text=self.ids.find.text, secondary_text="Secondary text here", tertiary_text= "fit more text than usual"))
+                self.ids.scroll.add_widget(
+                    ThreeLineAvatarIconListItem(text=self.ids.find.text, secondary_text="Secondary text here",
+                                                tertiary_text="fit more text than usual"))
             self.ids.set.text = "Findings of: " + self.ids.find.text
         else:
             self.ids.find.text = ""
             print("EMPTY")
 
     def clear(self):
-
         pass
 
 
@@ -178,6 +214,9 @@ class MyApp(MDApp):
 
         Builder.load_file('mainViews.kv')
         sm.add_widget(MainWindow(name="main"))
+
+        Builder.load_file('verifyWindow.kv')
+        sm.add_widget(VerifyWindow(name="verify"))
 
         sm.current = "login"
 

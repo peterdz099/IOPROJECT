@@ -15,7 +15,10 @@ from database_handler.users import Users
 from database_handler.users import is_pwd_correct
 import webbrowser
 import random
-
+import os
+from email.message import EmailMessage
+import ssl
+import smtplib
 
 # from file_manager import load_file_and_save_to_csv
 from file_manager import load_file_and_save_to_csv
@@ -43,9 +46,33 @@ class VerifyWindow(Screen):
 
     @staticmethod
     def send_email():
+
+        email_sender = "toysapp8@gmail.com"
+        email_password = os.environ.get("EMAIL_PASSWORD")
+
+        #email_receiver = VerifyWindow.email_or_username
+
+        email_receiver = "piotrdziula@gmail.com"
+        subject = "Verification Code"
+
         code = random.randint(100000, 1000000)
         VerifyWindow.generated_code = str(code)
         print(code)
+
+        body = f"""Type your verification code in application\nYour Code: {code}"""
+
+        em = EmailMessage()
+        em['From'] = email_sender
+        em['To'] = email_receiver
+        em['Subject'] = subject
+        em.set_content(body)
+
+        context = ssl.create_default_context()
+
+        with smtplib.SMTP_SSL('smtp.gmail.com', 465, context=context) as smtp:
+            smtp.login(email_sender, email_password)
+            smtp.sendmail(email_sender, email_receiver, em.as_string())
+
 
     def reset(self):
         self.ids.code.text = ""
@@ -71,7 +98,7 @@ class LoginWindow(Screen):
             else:
                 print("BAD PASSWORD")
         elif dictionary and dictionary.get('is_verified') == 0:
-            sm.get_screen("verify").set_user(self.email.text)
+            sm.get_screen("verify").set_user(dictionary.get('email'))
             sm.get_screen("verify").send_email()
             self.reset()
             sm.current = "verify"

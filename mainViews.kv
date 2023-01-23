@@ -158,8 +158,6 @@
             icon: 'file'
 
             MDFloatLayout:
-                md_bg_color: 1,1,1,1
-
                 ScreenManager:
                     id: screen_manager_2
                     Screen:
@@ -198,14 +196,13 @@
                             pos_hint:{"x":0.2,"y":0.26}
                             md_bg_color: "#2c4591"
                             on_release:
-                                root.handle_import_button_pressed()
-
+                                root.search_from_file()
+                                screen_manager_2.transition.direction = "down"
                     Screen:
-                        id: s2
                         name: "s2"
 
                         MDTextField:
-                            id: set2
+                            text: "list"
                             multiline : False
                             halign: "center"
                             valign: "center"
@@ -225,6 +222,8 @@
                             ScrollView:
                                 MDList:
                                     id: scroll2
+                                    OneLineListItem:
+                                        text : "dupa"
 
                         MDFloatingActionButton:
                             icon: "arrow-down-thick"
@@ -233,8 +232,9 @@
                             size_hint: 0.18, 0.1333
                             md_bg_color: "#2c4591"
                             on_release:
-                                root.clear_findings()
+                                root.clear_file_findings()
                                 screen_manager_2.transition.direction = "up"
+
                     Screen:
                         name: "s3"
                         FloatLayout:
@@ -283,8 +283,9 @@
                                 background_color: (133/255,225/255,189/255,0)
                                 color: (92/255, 94/255, 94/255,1)
                                 on_release:
-                                    screen_manager_2.current = "screeen2"
+                                    screen_manager_2.current = "s2"
                                     screen_manager_2.transition.direction = "up"
+
 
         MDBottomNavigationItem:
             name: 'screen 3'
@@ -344,8 +345,7 @@
                 ScrollView:
                     MDList:
                         id: scroll_history
-                        OneLineListItem:
-                            text: "dupa"
+
 
         MDBottomNavigationItem:
             name: 'screen 5'

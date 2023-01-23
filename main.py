@@ -129,10 +129,13 @@ class MainWindow(Screen):
     def set_name(self, name):
         self.ids.username.text = "You are logged as: " + name
 
-    def clear_findings(self, *args):
+    def clear_findings(self):
         self.ids.scroll.clear_widgets()
         self.ids.screen_manager.current = "screeen1"
-        pass
+
+    def clear_file_findings(self):
+        self.ids.scroll2.clear_widgets()
+        self.ids.screen_manager_2.current = "s1"
 
     def clear_search(self):
         self.ids.find.text = ""
@@ -174,15 +177,25 @@ class MainWindow(Screen):
                                                                        on_release=lambda x: self.to_product()))
             self.ids.set.text = "Findings of: " + self.ids.find.text
         else:
-            "EMPTY"
+            print("EMPTY")
+
+    def search_from_file(self):
+        self.ids.screen_manager_2.current = "s2"
+        for i in range(4):
+            self.ids.scroll2.add_widget(OneLineListItem(text=f"pitok: {i}",
+                                                        on_release=lambda x: self.to_file_product()))
 
     def handle_import_button_pressed(self):
         #offer_list = load_file_and_save_to_csv()
-        self.ids.screen_manager_2.current = "s2"
+        pass
 
     def to_product(self, num=0):
         self.ids.screen_manager.current = "screeen3"
         self.ids.screen_manager.transition.direction = "down"
+
+    def to_file_product(self, num=0):
+        self.ids.screen_manager_2.current = "s3"
+        self.ids.screen_manager_2.transition.direction = "down"
 
 
 class WithoutLoginWindow(Screen):
@@ -242,7 +255,7 @@ class MyApp(MDApp):
         Builder.load_file('verifyWindow.kv')
         sm.add_widget(VerifyWindow(name="verify"))
 
-        sm.current = "login"
+        sm.current = "main"
 
         return sm
 

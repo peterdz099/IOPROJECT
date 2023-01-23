@@ -100,7 +100,7 @@ def scraper(name, mode, page=1, sort_by_num_shops=False):
     # mode 0 -> szukaj wszystko
     # mode 1 -> szukaj tylko alegro
     # mode 2 -> szukaj wszystko tylko nie allegro
-    name = name
+    name = name.replace(" ", "+")
     page = page
     mode = mode
     sort_by_num_shops = sort_by_num_shops

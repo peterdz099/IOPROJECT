@@ -45,7 +45,6 @@ class Toy:
         product_soup = BeautifulSoup(resp.text, 'html.parser')
         shops_cards = product_soup.find_all('li', class_="product-offers__list__item js_productOfferGroupItem")
         shop_list = []
-        # self.shop_num = len(shops_cards)
         for shop_card in shops_cards:
             shop_info = shop_card.find('div',
                                        class_="product-offer__container clickable-offer js_offer-container-click js_product-offer")
@@ -70,9 +69,10 @@ class Toy:
                     shop_list.append(shop)
                     self.shop_num += 1
         self.shop_list = sorted(shop_list, key=operator.attrgetter('price'))
+
         try:
             error = False
-            deliveryURL = "https://www.ceneo.pl/Product/GetOfferDetails?data=" + shop_list[0].shop_url.split("?e=")[1]
+            deliveryURL = "https://www.ceneo.pl/Product/GetOfferDetails?data=" + self.shop_list[0].shop_url.split("?e=")[1]
 
         except:
             error = True
@@ -94,7 +94,7 @@ class Toy:
                         line = []
                         line.append(float(deliveryInfo[0].replace(",", ".")))
                         line.append(deliveryInfo[1])
-                        shop_list[0].deliver_method.append(line)
+                        self.shop_list[0].deliver_method.append(line)
 
 def scraper(name, mode, page=1, sort_by_num_shops=False):
     # mode 0 -> szukaj wszystko
@@ -161,5 +161,5 @@ if __name__ == "__main__":
     for toy in toylist:
         print(toy)
         for shop in toy.shop_list:
-            print(shop.deliver_method)
+            print(shop)
         print("############_________###############")

@@ -172,6 +172,8 @@
                                 md_bg_color: "#2c4591"
                                 size_hint: 0.3, 0.1
                                 pos_hint: {"center_x": 0.67, "center_y": 0.13}
+                                on_release: root.add_to_basket()
+
                             Button:
                                 text: "Back to findings"
                                 underline: True
@@ -312,6 +314,7 @@
                                 md_bg_color: "#2c4591"
                                 size_hint: 0.3, 0.1
                                 pos_hint: {"center_x": 0.67, "center_y": 0.13}
+                                on_release: root.add_to_basket_from_file()
                             Button:
                                 text: "Back to findings"
                                 underline: True

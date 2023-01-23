@@ -8,6 +8,7 @@ from kivy.properties import ObjectProperty
 from kivymd.app import MDApp
 import webscraper
 from database_handler.initialize_database import Database
+from database_handler.offers import Offers
 from database_handler.search_history import SearchHistory
 from database_handler.shopping_list import ShoppingList
 from database_handler.users import Users
@@ -240,7 +241,6 @@ class MainWindow(Screen):
     def to_product(self, obj):
         MainWindow.obj = obj
         string = create_details_string(obj.name, obj.min_price, obj.manufacturer, obj.shop_num)
-        #MainWindow.url_helper = f"https://www.ceneo.pl/{obj.id}"
         self.ids.screen_manager.current = "screeen3"
         self.ids.details.text = string
         self.ids.screen_manager.transition.direction = "down"
@@ -249,14 +249,24 @@ class MainWindow(Screen):
     def to_file_product(self, obj):
         MainWindow.obj2 = obj
         string = create_details_string(obj.name, obj.min_price, obj.manufacturer, obj.shop_num)
-        #MainWindow.url_helper2 = f"https://www.ceneo.pl/{obj.id}"
         self.ids.screen_manager_2.current = "s3"
         self.ids.details2.text = string
         self.ids.screen_manager_2.transition.direction = "down"
         self.ids.img2.source = f"https:{obj.photo_url}"
 
     def add_to_basket(self):
-        pass
+        o = MainWindow.obj
+        print(o)
+        offersResources.add_offer(o.id, o.name, o.min_price,f"https://www.ceneo.pl/{o.id}", "1", o.manufacturer,
+                                  o.photo_url)
+        shoppingListResources.add_shopping_list(MainWindow.user_id, o.id)
+
+    def add_to_basket_from_file(self):
+        o = MainWindow.obj2
+        print(o)
+        offersResources.add_offer(o.id, o.name, o.min_price,f"https://www.ceneo.pl/{o.id}", "1", o.manufacturer,
+                                  o.photo_url)
+        shoppingListResources.add_shopping_list(MainWindow.user_id,o.id)
 
     def go_to_web(self):
         webbrowser.open(f"https://www.ceneo.pl/{MainWindow.obj.id}")
@@ -326,6 +336,7 @@ sm = WindowManager()
 db = Database()
 usersResources = Users(db)
 shoppingListResources = ShoppingList(db)
+offersResources = Offers(db)
 historyResources = SearchHistory(db)
 db.create_tables()
 
@@ -347,7 +358,7 @@ class MyApp(MDApp):
         Builder.load_file('verifyWindow.kv')
         sm.add_widget(VerifyWindow(name="verify"))
 
-        sm.current = "main"
+        sm.current = "login"
 
         return sm
 

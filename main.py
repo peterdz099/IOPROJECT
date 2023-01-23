@@ -5,7 +5,6 @@ from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.config import Config
 from kivy.properties import ObjectProperty
 from kivymd.app import MDApp
-
 import webscraper
 from database_handler.initialize_database import Database
 from database_handler.users import Users
@@ -14,7 +13,8 @@ import random
 from file_manager import load_file_and_save_to_csv
 
 
-allegro_mode=0
+
+
 
 class VerifyWindow(Screen):
     generated_code = ""
@@ -51,9 +51,11 @@ class LoginWindow(Screen):
 
         dictionary = usersResources.select_user(email=self.email.text, username=self.email.text)
 
-        if dictionary:
+        if dictionary and dictionary.get('is_verified') == 1:
             if is_pwd_correct(self.password.text, dictionary.get('password')):
                 sm.get_screen("main").set_name(self.email.text)
+                sm.get_screen("main").history(self.email.text)
+                sm.get_screen("main").cart(self.email.text)
                 self.reset()
                 sm.current = "main"
             else:
@@ -150,13 +152,13 @@ class MainWindow(Screen):
         self.clear_basket()
         self.clear_history()
 
-    def history(self):
+    def history(self, username_or_email):
         for i in range(30):
-            self.ids.scroll_history.add_widget(OneLineListItem(text=f"ssssss: {i}"))
+            self.ids.scroll_history.add_widget(OneLineListItem(text=f"{username_or_email}"))
 
-    def cart(self):
+    def cart(self, username_or_email):
         for i in range(30):
-            self.ids.scroll_cart.add_widget(OneLineListItem(text=f"ssssss: {i}"))
+            self.ids.scroll_cart.add_widget(OneLineListItem(text=f"{username_or_email}"))
 
     def search(self):
 
@@ -166,28 +168,36 @@ class MainWindow(Screen):
         if any(c.isalpha() for c in s):
             self.ids.screen_manager.current = "screeen2"
             for i in range(4):
-                self.ids.scroll.add_widget(ThreeLineAvatarIconListItem(text=self.ids.find.text, secondary_text="Secondary text here", tertiary_text= "fit more text than usual"))
+                self.ids.scroll.add_widget(ThreeLineAvatarIconListItem(text=self.ids.find.text,
+                                                                       secondary_text="Secondary text here",
+                                                                       tertiary_text= "fit more text than usual",
+                                                                       on_release=lambda x: self.to_product()))
             self.ids.set.text = "Findings of: " + self.ids.find.text
         else:
             "EMPTY"
 
     def handle_import_button_pressed(self):
-        offer_list = load_file_and_save_to_csv()
+        #offer_list = load_file_and_save_to_csv()
+        self.ids.screen_manager_2.current = "s2"
+
+    def to_product(self, num=0):
+        self.ids.screen_manager.current = "screeen3"
+        self.ids.screen_manager.transition.direction = "down"
 
 
 class WithoutLoginWindow(Screen):
 
     allegro_mode = 0
 
-
     def search(self):
         print(self.ids.find.text)
         s = self.ids.find.text
-        toy_list = webscraper.scraper(s, allegro_mode)
+        toy_list = webscraper.scraper(s, WithoutLoginWindow.allegro_mode)
 
         if any(c.isalpha() for c in s):
             self.ids.screen_manager.current = "screeen2"
-            for i in range(4):
+
+            for i in range(10):
                 self.ids.scroll.add_widget(TwoLineAvatarListItem(
                     ImageLeftWidget(
                         source=f"https:{toy_list[i].photo_url}"),
@@ -205,9 +215,9 @@ class WithoutLoginWindow(Screen):
     def to_product(self, num):
         self.ids.screen_manager.current = "screeen3"
 
+
 class WindowManager(ScreenManager):
     pass
-
 
 sm = WindowManager()
 db = Database()

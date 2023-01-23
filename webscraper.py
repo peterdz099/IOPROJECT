@@ -125,7 +125,11 @@ def scraper(name, mode, page=1, sort_by_num_shops=False):
         toy_id = item.get('data-pid')
         toy_price = float(item.get('data-productminprice'))
         toy_manufacturer = item.get('data-brand')
-        toy_photo_url = item.find('img').get('data-original')
+        toy_photo_url = item.find('img').get("data-original")
+
+        if toy_photo_url == None:
+            toy_photo_url = item.find('img').get("src")
+
         toy = Toy(name=toy_name, id=toy_id, min_price=toy_price, manufacturer=toy_manufacturer, shop_num=0, photo_url=toy_photo_url)
         toy.getShopInfo(mode)
         if toy.shop_num != 0:

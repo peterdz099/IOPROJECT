@@ -1,8 +1,13 @@
 
 <Check@MDCheckbox>:
-    group: 'group'
+    group: 'group1'
     size_hint: None, None
-    size: dp(48), dp(48)
+    size: dp(35), dp(35)
+
+<check_sort@MDCheckbox>:
+    group: 'group12'
+    size_hint: None, None
+    size: dp(35), dp(35)
 
 <WithoutLoginWindow>:
     name: "without"
@@ -48,7 +53,7 @@
                         Check:
                             active: True
                             pos_hint: {'center_x': .8, 'center_y': .52}
-                            on_active: root.change_mode(0)
+
                         MDLabel:
                             text: "Every store"
                             font_size: 16
@@ -56,24 +61,42 @@
                             pos_hint:{"x": 0.18,'center_y': .52}
 
                         Check:
-                            pos_hint: {'center_x': .8, 'center_y': .42}
+                            pos_hint: {'center_x': .8, 'center_y': .47}
                             on_active: root.change_mode(1)
                         MDLabel:
                             text: "Only Allegro"
                             font_size: 16
                             halign: 'left'
-                            pos_hint:{"x": 0.18,'center_y': .42}
+                            pos_hint:{"x": 0.18,'center_y': .47}
 
                         Check:
-                            pos_hint: {'center_x': .8, 'center_y': .32}
+                            pos_hint: {'center_x': .8, 'center_y': .42}
                             on_active: root.change_mode(2)
                         MDLabel:
                             text: "Every store except Allegro"
                             font_size: 16
                             halign: 'left'
+                            pos_hint:{"x": 0.18,'center_y': .42}
+
+                        check_sort:
+                            active: True
+                            pos_hint: {'center_x': .8, 'center_y': .32}
+
+                        MDLabel:
+                            text: "Sort by price"
+                            font_size: 16
+                            halign: 'left'
                             pos_hint:{"x": 0.18,'center_y': .32}
 
+                        check_sort:
+                            pos_hint: {'center_x': .8, 'center_y': .27}
+                            on_active: root.change_sort_mode(True)
 
+                        MDLabel:
+                            text: "Sort by shop number"
+                            font_size: 16
+                            halign: 'left'
+                            pos_hint:{"x": 0.18,'center_y': .27}
                         MDTextField:
                             id: find
                             halign: "center"
@@ -88,7 +111,7 @@
                             text: "Search"
                             font_size: 16
                             size_hint: 0.6, 0.10
-                            pos_hint:{"x":0.2,"y":0.15}
+                            pos_hint:{"x":0.2,"y":0.10}
                             md_bg_color: "#2c4591"
                             on_release:
                                 screen_manager.transition.direction = "down"
@@ -108,7 +131,6 @@
 
                     Screen:
                         name: "screeen2"
-
                         MDTextField:
                             id: set
                             disabled: True

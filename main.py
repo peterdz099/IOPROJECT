@@ -76,7 +76,6 @@ class VerifyWindow(Screen):
             smtp.login(email_sender, email_password)
             smtp.sendmail(email_sender, email_receiver, em.as_string())
 
-
     def reset(self):
         self.ids.code.text = ""
         VerifyWindow.generated_code = None
@@ -318,6 +317,7 @@ class MainWindow(Screen):
 
 class WithoutLoginWindow(Screen):
     allegro_mode = 0
+    sort_mode = False
     url_helper = ""
 
     def search(self):
@@ -325,10 +325,11 @@ class WithoutLoginWindow(Screen):
         s = self.ids.find.text
 
         if any(c.isalpha() for c in s):
-            self.ids.screen_manager.current = "screeen2"
 
             toy_list = webscraper.scraper(s, WithoutLoginWindow.allegro_mode)
             if len(toy_list):
+                self.ids.find.text = ""
+                self.ids.screen_manager.current = "screeen2"
                 for i in range(10 if len(toy_list) > 10 else len(toy_list)):
                     self.ids.scroll.add_widget(TwoLineAvatarListItem(
                         ImageLeftWidget(
@@ -340,7 +341,8 @@ class WithoutLoginWindow(Screen):
                     ))
                 self.ids.set.text = "Findings of: " + self.ids.find.text
             else:
-                "Doesn't exists"
+                self.ids.find.text = ""
+                print("Doesn't exists")
         else:
             self.ids.find.text = ""
             print("EMPTY")
@@ -363,7 +365,12 @@ class WithoutLoginWindow(Screen):
     @staticmethod
     def change_mode(mode):
         WithoutLoginWindow.allegro_mode = mode
-        print(WithoutLoginWindow.allegro_mode)
+
+    @staticmethod
+    def change_sort_mode(mode):
+        WithoutLoginWindow.sort_mode = mode
+        print(mode)
+
 
     def go_to_web(self):
         webbrowser.open(WithoutLoginWindow.url_helper)

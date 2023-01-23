@@ -1,4 +1,5 @@
-from kivymd.uix.list import OneLineListItem, ThreeLineAvatarIconListItem, TwoLineAvatarListItem, ImageLeftWidget
+from kivymd.uix.list import OneLineListItem, ThreeLineAvatarIconListItem, TwoLineAvatarListItem, ImageLeftWidget, \
+    TwoLineListItem
 from validate_email_address import validate_email
 from kivy.lang import Builder
 from kivy.uix.screenmanager import ScreenManager, Screen
@@ -7,13 +8,18 @@ from kivy.properties import ObjectProperty
 from kivymd.app import MDApp
 import webscraper
 from database_handler.initialize_database import Database
+from database_handler.search_history import SearchHistory
+from database_handler.shopping_list import ShoppingList
 from database_handler.users import Users
 from database_handler.users import is_pwd_correct
 import random
-from file_manager import load_file_and_save_to_csv
 
 
 
+# from file_manager import load_file_and_save_to_csv
+
+def create_details_string():
+    pass
 
 
 class VerifyWindow(Screen):
@@ -53,8 +59,8 @@ class LoginWindow(Screen):
 
         if dictionary and dictionary.get('is_verified') == 1:
             if is_pwd_correct(self.password.text, dictionary.get('password')):
-                sm.get_screen("main").set_name(self.email.text)
-                sm.get_screen("main").history(self.email.text)
+                sm.get_screen("main").set_name(self.email.text, dictionary.get('id'))
+                sm.get_screen("main").history(dictionary.get('id'))
                 sm.get_screen("main").cart(self.email.text)
                 self.reset()
                 sm.current = "main"
@@ -125,9 +131,11 @@ class RegisterWindow(Screen):
 
 
 class MainWindow(Screen):
+    user_id = None
 
-    def set_name(self, name):
+    def set_name(self, name, idu):
         self.ids.username.text = "You are logged as: " + name
+        MainWindow.user_id = idu
 
     def clear_findings(self):
         self.ids.scroll.clear_widgets()
@@ -155,9 +163,16 @@ class MainWindow(Screen):
         self.clear_basket()
         self.clear_history()
 
-    def history(self, username_or_email):
-        for i in range(30):
-            self.ids.scroll_history.add_widget(OneLineListItem(text=f"{username_or_email}"))
+    def history(self, user_id):
+        user_history = historyResources.select_search_history(user_id)
+
+        print(user_history)
+        if user_history:
+            for i in reversed(user_history):
+                self.ids.scroll_history.add_widget(TwoLineListItem(text=str(i.get('user_input')),
+                                                                   secondary_text=str(i.get('datetime'))))
+        else:
+            self.ids.scroll_history.add_widget(OneLineListItem(text='           Your history list is empty')),
 
     def cart(self, username_or_email):
         for i in range(30):
@@ -166,14 +181,17 @@ class MainWindow(Screen):
     def search(self):
 
         print(self.ids.find.text)
-        s = self.ids.find.text
+        search = self.ids.find.text
 
-        if any(c.isalpha() for c in s):
+        if any(c.isalpha() for c in search):
+            historyResources.add_search_history(MainWindow.user_id, search)
+            self.clear_history()
+            self.history(MainWindow.user_id)
             self.ids.screen_manager.current = "screeen2"
             for i in range(4):
                 self.ids.scroll.add_widget(ThreeLineAvatarIconListItem(text=self.ids.find.text,
                                                                        secondary_text="Secondary text here",
-                                                                       tertiary_text= "fit more text than usual",
+                                                                       tertiary_text="fit more text than usual",
                                                                        on_release=lambda x: self.to_product()))
             self.ids.set.text = "Findings of: " + self.ids.find.text
         else:
@@ -186,20 +204,19 @@ class MainWindow(Screen):
                                                         on_release=lambda x: self.to_file_product()))
 
     def handle_import_button_pressed(self):
-        #offer_list = load_file_and_save_to_csv()
+        # offer_list = load_file_and_save_to_csv()
         pass
 
-    def to_product(self, num=0):
+    def to_product(self):
         self.ids.screen_manager.current = "screeen3"
         self.ids.screen_manager.transition.direction = "down"
 
-    def to_file_product(self, num=0):
+    def to_file_product(self):
         self.ids.screen_manager_2.current = "s3"
         self.ids.screen_manager_2.transition.direction = "down"
 
 
 class WithoutLoginWindow(Screen):
-
     allegro_mode = 0
 
     def search(self):
@@ -215,7 +232,7 @@ class WithoutLoginWindow(Screen):
                     ImageLeftWidget(
                         source=f"https:{toy_list[i].photo_url}"),
                     text=toy_list[i].name, secondary_text=f"https://www.ceneo.pl/{toy_list[i].id}",
-                    on_release=lambda x: self.to_product(toy_list[i])
+                    on_release=lambda x: self.to_product()
                 ))
             self.ids.set.text = "Findings of: " + self.ids.find.text
         else:
@@ -225,16 +242,19 @@ class WithoutLoginWindow(Screen):
     def clear(self):
         pass
 
-    def to_product(self, num):
+    def to_product(self):
         self.ids.screen_manager.current = "screeen3"
 
 
 class WindowManager(ScreenManager):
     pass
 
+
 sm = WindowManager()
 db = Database()
 usersResources = Users(db)
+shoppingListResources = ShoppingList(db)
+historyResources = SearchHistory(db)
 db.create_tables()
 
 
@@ -255,14 +275,14 @@ class MyApp(MDApp):
         Builder.load_file('verifyWindow.kv')
         sm.add_widget(VerifyWindow(name="verify"))
 
-        sm.current = "main"
+        sm.current = "login"
 
         return sm
 
 
 if __name__ == '__main__':
-    Config.set('graphics', 'width', '400')
-    Config.set('graphics', 'height', '600')
+    Config.set('graphics', 'width', '600')
+    Config.set('graphics', 'height', '800')
     Config.set('graphics', 'resizable', False)
     Config.write()
     MyApp().run()

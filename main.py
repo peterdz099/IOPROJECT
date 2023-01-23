@@ -24,9 +24,12 @@ import smtplib
 from file_manager import load_file_and_save_to_csv
 
 
-def create_details_string(name, price, manu, shops):
-    s = f"\n\tNAME: {name} \n\tPRICE: {price}\n\tMANUFACTURER: {manu}\n\tNUMBER OF SHOPS: {shops}\n\t"
-    return s
+def create_details_string(name, price, manu, shops, shop_list):
+    s = f"\n\tNAME: {name} \n\tPRICE: {price}\n\tMANUFACTURER: {manu}\n\tNUMBER OF SHOPS: {shops}\n\tBEST SHOP: {shop_list[0].name}\n\tDELIVERY METHOD:\n\t"
+    d= ""
+    for delivery_method in shop_list[0].deliver_method:
+        d = d + "\t" + delivery_method[1] + "\t" + str(delivery_method[0]) + "zł" + "\n\t"
+    return s + d
 
 
 class VerifyWindow(Screen):
@@ -276,7 +279,7 @@ class MainWindow(Screen):
 
     def to_product(self, obj):
         MainWindow.obj = obj
-        string = create_details_string(obj.name, obj.min_price, obj.manufacturer, obj.shop_num)
+        string = create_details_string(obj.name, obj.min_price, obj.manufacturer, obj.shop_num, obj.shop_list)
         self.ids.screen_manager.current = "screeen3"
         self.ids.details.text = string
         self.ids.screen_manager.transition.direction = "down"
@@ -284,7 +287,7 @@ class MainWindow(Screen):
 
     def to_file_product(self, obj):
         MainWindow.obj2 = obj
-        string = create_details_string(obj.name, obj.min_price, obj.manufacturer, obj.shop_num)
+        string = create_details_string(obj.name, obj.min_price, obj.manufacturer, obj.shop_num, obj.shop_list)
         self.ids.screen_manager_2.current = "s3"
         self.ids.details2.text = string
         self.ids.screen_manager_2.transition.direction = "down"
@@ -352,7 +355,7 @@ class WithoutLoginWindow(Screen):
     def to_product(self, obj):
         print(obj)
         WithoutLoginWindow.url_helper = f"https://www.ceneo.pl/{obj.id}"
-        string = create_details_string(obj.name, obj.min_price, obj.manufacturer, obj.shop_num)
+        string = create_details_string(obj.name, obj.min_price, obj.manufacturer, obj.shop_num, obj.shop_list)
         self.ids.screen_manager.current = "screeen3"
         self.ids.details.text = string
         self.ids.img.source = f"https:{obj.photo_url}"

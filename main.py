@@ -65,7 +65,7 @@ class LoginWindow(Screen):
             if is_pwd_correct(self.password.text, dictionary.get('password')):
                 sm.get_screen("main").set_name(self.email.text, dictionary.get('id'))
                 sm.get_screen("main").history(dictionary.get('id'))
-                sm.get_screen("main").cart(dictionary.get)
+                sm.get_screen("main").cart()
                 self.reset()
                 sm.current = "main"
             else:
@@ -183,7 +183,7 @@ class MainWindow(Screen):
         else:
             self.ids.scroll_history.add_widget(OneLineListItem(text='           Your history list is empty')),
 
-    def cart(self, username_or_email):
+    def cart(self):
 
         basket = shoppingListResources.select_shopping_list(MainWindow.user_id)
 
@@ -196,12 +196,10 @@ class MainWindow(Screen):
                   text=offer.get('toy_name'),
                   secondary_text=f"https://www.ceneo.pl/{offer.get('id')}"))
 
-
     def search(self):
 
         print(self.ids.find.text)
         search = self.ids.find.text
-
 
         if any(c.isalpha() for c in search):
             toy_list = webscraper.scraper(search, MainWindow.allegro_mode)
@@ -270,6 +268,8 @@ class MainWindow(Screen):
         offersResources.add_offer(o.id, o.name, o.min_price,f"https://www.ceneo.pl/{o.id}", "1", o.manufacturer,
                                   o.photo_url)
         shoppingListResources.add_shopping_list(MainWindow.user_id, o.id)
+        self.clear_basket()
+        self.cart()
 
     def add_to_basket_from_file(self):
         o = MainWindow.obj2

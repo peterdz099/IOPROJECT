@@ -44,6 +44,7 @@
                             pos_hint:{"x": 0.4,"y": -0.4}
 
                         Check:
+                            active: True
                             pos_hint: {'center_x': .8, 'center_y': .52}
                             on_active: root.change_mode(0)
                         MDLabel:
@@ -350,13 +351,20 @@
                 md_bg_color: 1,1,1,1
                 orientation: "vertical"
                 padding: "8dp"
-                size_hint: 0.8, 0.8
-                pos_hint: {"center_x": 0.5, "center_y": 0.43}
+                size_hint: 0.8, 0.7
+                pos_hint: {"center_x": 0.5, "center_y": 0.48}
 
                 ScrollView:
                     MDList:
                         id: scroll_cart
-
+            MDFillRoundFlatButton:
+                text: "Import to file"
+                text_color: 1,1,1,1
+                md_bg_color: "#2c4591"
+                #background_normal
+                size_hint: 0.3, 0.1
+                pos_hint:{"center_x": 0.5, "center_y": 0.08}
+                on_release: root.go_to_web()
 
         MDBottomNavigationItem:
             name: 'screen 4'

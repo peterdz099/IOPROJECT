@@ -77,7 +77,8 @@ class Database:
                 user_id INT(11),
                 offer_id INT(11),
                 FOREIGN KEY(user_id) REFERENCES users(id),
-                FOREIGN KEY(offer_id) REFERENCES offers(id)
+                FOREIGN KEY(offer_id) REFERENCES offers(id),
+                UNIQUE KEY (user_id, offer_id)
             )
             """
 

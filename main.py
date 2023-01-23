@@ -65,7 +65,7 @@ class LoginWindow(Screen):
             if is_pwd_correct(self.password.text, dictionary.get('password')):
                 sm.get_screen("main").set_name(self.email.text, dictionary.get('id'))
                 sm.get_screen("main").history(dictionary.get('id'))
-                sm.get_screen("main").cart(self.email.text)
+                sm.get_screen("main").cart(dictionary.get)
                 self.reset()
                 sm.current = "main"
             else:
@@ -184,8 +184,18 @@ class MainWindow(Screen):
             self.ids.scroll_history.add_widget(OneLineListItem(text='           Your history list is empty')),
 
     def cart(self, username_or_email):
-        for i in range(30):
-            self.ids.scroll_cart.add_widget(OneLineListItem(text=f"{username_or_email}"))
+
+        basket = shoppingListResources.select_shopping_list(MainWindow.user_id)
+
+        for i in range(len(basket)):
+            offer = offersResources.select_offer(basket[i].get('offer_id'))
+            print(offer)
+            self.ids.scroll_cart.add_widget(TwoLineAvatarListItem(
+                  ImageLeftWidget(
+                      source=f"https:{offer.get('img_url')}"),
+                  text=offer.get('toy_name'),
+                  secondary_text=f"https://www.ceneo.pl/{offer.get('id')}"))
+
 
     def search(self):
 

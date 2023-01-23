@@ -26,7 +26,7 @@ from file_manager import load_file_and_save_to_csv
 
 def create_details_string(name, price, manu, shops, shop_list):
     s = f"\n\tNAME: {name} \n\tPRICE: {price}\n\tMANUFACTURER: {manu}\n\tNUMBER OF SHOPS: {shops}\n\tBEST SHOP: {shop_list[0].name}\n\tDELIVERY METHOD:\n\t"
-    d= ""
+    d = ""
     for delivery_method in shop_list[0].deliver_method:
         d = d + "\t" + delivery_method[1] + "\t" + str(delivery_method[0]) + "zł" + "\n\t"
     return s + d
@@ -49,13 +49,13 @@ class VerifyWindow(Screen):
 
     @staticmethod
     def send_email():
-
         email_sender = "toysapp8@gmail.com"
         email_password = os.environ.get("EMAIL_PASSWORD")
 
-        #email_receiver = VerifyWindow.email_or_username
+        email_receiver = VerifyWindow.email_or_username
 
-        email_receiver = "piotrdziula@gmail.com"
+        # email_receiver = "piotrdziula@gmail.com"
+
         subject = "Verification Code"
 
         code = random.randint(100000, 1000000)
@@ -210,20 +210,22 @@ class MainWindow(Screen):
                 self.ids.scroll_history.add_widget(TwoLineListItem(text=str(i.get('user_input')),
                                                                    secondary_text=str(i.get('datetime'))))
         else:
-            self.ids.scroll_history.add_widget(OneLineListItem(text='           Your history list is empty')),
+            self.ids.scroll_history.add_widget(OneLineListItem(text='           Your search history is empty')),
 
     def cart(self):
 
         basket = shoppingListResources.select_shopping_list(MainWindow.user_id)
-
-        for i in range(len(basket)):
-            offer = offersResources.select_offer(basket[i].get('offer_id'))
-            print(offer)
-            self.ids.scroll_cart.add_widget(TwoLineAvatarListItem(
-                  ImageLeftWidget(
-                      source=f"https:{offer.get('img_url')}"),
-                  text=offer.get('toy_name'),
-                  secondary_text=f"https://www.ceneo.pl/{offer.get('id')}"))
+        if basket:
+            for i in range(len(basket)):
+                offer = offersResources.select_offer(basket[i].get('offer_id'))
+                print(offer)
+                self.ids.scroll_cart.add_widget(TwoLineAvatarListItem(
+                    ImageLeftWidget(
+                        source=f"https:{offer.get('img_url')}"),
+                    text=offer.get('toy_name'),
+                    secondary_text=f"https://www.ceneo.pl/{offer.get('id')}"))
+        else:
+            self.ids.scroll_cart.add_widget(OneLineListItem(text="              Your cart list is empty")),
 
     def search(self):
 
@@ -293,9 +295,9 @@ class MainWindow(Screen):
         self.ids.img2.source = f"https:{obj.photo_url}"
 
     def add_to_basket(self):
-        o = MainWindow.obj
+        o = MainWindow.obj2
         print(o)
-        offersResources.add_offer(o.id, o.name, o.min_price,f"https://www.ceneo.pl/{o.id}", "1", o.manufacturer,
+        offersResources.add_offer(o.id, o.name, o.min_price, f"https://www.ceneo.pl/{o.id}", "1", o.manufacturer,
                                   o.photo_url)
         shoppingListResources.add_shopping_list(MainWindow.user_id, o.id)
         self.clear_basket()
@@ -304,9 +306,11 @@ class MainWindow(Screen):
     def add_to_basket_from_file(self):
         o = MainWindow.obj2
         print(o)
-        offersResources.add_offer(o.id, o.name, o.min_price,f"https://www.ceneo.pl/{o.id}", "1", o.manufacturer,
+        offersResources.add_offer(o.id, o.name, o.min_price, f"https://www.ceneo.pl/{o.id}", "1", o.manufacturer,
                                   o.photo_url)
-        shoppingListResources.add_shopping_list(MainWindow.user_id,o.id)
+        shoppingListResources.add_shopping_list(MainWindow.user_id, o.id)
+        self.clear_basket()
+        self.cart()
 
     def go_to_web(self):
         webbrowser.open(f"https://www.ceneo.pl/{MainWindow.obj.id}")
@@ -370,7 +374,6 @@ class WithoutLoginWindow(Screen):
     def change_sort_mode(mode):
         WithoutLoginWindow.sort_mode = mode
         print(mode)
-
 
     def go_to_web(self):
         webbrowser.open(WithoutLoginWindow.url_helper)

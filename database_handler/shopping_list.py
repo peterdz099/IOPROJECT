@@ -42,3 +42,15 @@ class ShoppingList:
                     raise Error('No shopping list found')
         except Error as e:
             print(e)
+
+    def delete_shopping_list(self, user_id):
+        delete_shopping_list_query = """
+                DELETE FROM shopping_list
+                WHERE user_id = %s
+                """
+        try:
+            with self.connection.cursor() as cursor:
+                cursor.execute(delete_shopping_list_query, (user_id,))
+                self.connection.commit()
+        except Error as e:
+            print(e)

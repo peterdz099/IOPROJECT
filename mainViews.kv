@@ -28,7 +28,7 @@
                             text: "Find your dream toy!"
                             font_size: 14
                             halign: 'center'
-                            pos_hint:{"x": 0,"y": 0.1}
+                            pos_hint:{"x": 0,"y": 0.3}
 
                         Image:
                             source: 'resources/big ball.png'
@@ -43,6 +43,33 @@
                             size_hint: 1,1
                             pos_hint:{"x": 0.4,"y": -0.4}
 
+                        Check:
+                            pos_hint: {'center_x': .8, 'center_y': .52}
+                            on_active: root.change_mode(0)
+                        MDLabel:
+                            text: "Every store"
+                            font_size: 16
+                            halign: 'left'
+                            pos_hint:{"x": 0.18,'center_y': .52}
+
+                        Check:
+                            pos_hint: {'center_x': .8, 'center_y': .42}
+                            on_active: root.change_mode(1)
+                        MDLabel:
+                            text: "Only Allegro"
+                            font_size: 16
+                            halign: 'left'
+                            pos_hint:{"x": 0.18,'center_y': .42}
+
+                        Check:
+                            pos_hint: {'center_x': .8, 'center_y': .32}
+                            on_active: root.change_mode(2)
+                        MDLabel:
+                            text: "Every store except Allegro"
+                            font_size: 16
+                            halign: 'left'
+                            pos_hint:{"x": 0.18,'center_y': .32}
+
                         MDTextField:
                             id: find
                             halign: "center"
@@ -51,13 +78,13 @@
                             bg_color: 0,0,0,1
                             multiline: False
                             size_hint: 0.7, 0.12
-                            pos_hint:{"x": 0.15,"y": 0.45}
+                            pos_hint:{"x": 0.15,"y": 0.6}
 
                         MDFillRoundFlatButton:
                             text: "Search"
                             font_size: 16
                             size_hint: 0.6, 0.10
-                            pos_hint:{"x":0.2,"y":0.26}
+                            pos_hint:{"x":0.2,"y":0.15}
                             md_bg_color: "#2c4591"
                             on_release:
                                 root.search()
@@ -114,6 +141,11 @@
                                 size_hint: 0.7, 0.12
                                 pos_hint:{"x": 0.15,"y": 0.85}
 
+                            ImageLeftWidget:
+                                id: img
+                                size_hint: 0.45,0.3
+                                pos_hint: {"center_x": 0.5, "center_y": 0.66}
+
                             MDTextField:
                                 id: details
                                 text_color: 0,0,0,1
@@ -122,8 +154,8 @@
                                 halign: "center"
                                 valign: 'middle'
                                 multiline: True
-                                size_hint: 0.7, 0.8
-                                pos_hint:{"center_x": 0.5, "center_y": 0.43}
+                                size_hint: 0.7, 0.25
+                                pos_hint:{"center_x": 0.5, "center_y": 0.32}
 
                             MDFillRoundFlatButton:
                                 text: "Go to website"
@@ -131,19 +163,21 @@
                                 md_bg_color: "#2c4591"
                                 #background_normal
                                 size_hint: 0.3, 0.1
-                                pos_hint:{"center_x": 0.33, "center_y": 0.20}
+                                pos_hint:{"center_x": 0.33, "center_y": 0.13}
+                                on_release: root.go_to_web()
+
                             MDFillRoundFlatButton:
                                 text: "Add to Cart"
                                 text_color: 1,1,1,1
                                 md_bg_color: "#2c4591"
                                 size_hint: 0.3, 0.1
-                                pos_hint: {"center_x": 0.67, "center_y": 0.20}
+                                pos_hint: {"center_x": 0.67, "center_y": 0.13}
                             Button:
                                 text: "Back to findings"
                                 underline: True
                                 font_size: 13
                                 size_hint: 0.6, 0.10
-                                pos_hint:{"center_x": 0.5,"center_y": 0.1}
+                                pos_hint:{"center_x": 0.5,"center_y": 0.05}
                                 background_color: (133/255,225/255,189/255,0)
                                 color: (92/255, 94/255, 94/255,1)
                                 on_release:
@@ -202,7 +236,7 @@
                         name: "s2"
 
                         MDTextField:
-                            text: "list"
+                            text: "Findings from List"
                             multiline : False
                             halign: "center"
                             valign: "center"
@@ -222,8 +256,6 @@
                             ScrollView:
                                 MDList:
                                     id: scroll2
-                                    OneLineListItem:
-                                        text : "dupa"
 
                         MDFloatingActionButton:
                             icon: "arrow-down-thick"
@@ -250,6 +282,11 @@
                                 size_hint: 0.7, 0.12
                                 pos_hint:{"x": 0.15,"y": 0.85}
 
+                            ImageLeftWidget:
+                                id: img2
+                                size_hint: 0.45, 0.3
+                                pos_hint: {"center_x": 0.5, "center_y": 0.66}
+
                             MDTextField:
                                 id: details2
                                 text_color: 0,0,0,1
@@ -258,8 +295,8 @@
                                 halign: "center"
                                 valign: 'middle'
                                 multiline: True
-                                size_hint: 0.7, 0.8
-                                pos_hint:{"center_x": 0.5, "center_y": 0.43}
+                                size_hint: 0.7, 0.25
+                                pos_hint:{"center_x": 0.5, "center_y": 0.32}
 
                             MDFillRoundFlatButton:
                                 text: "Go to website"
@@ -267,19 +304,20 @@
                                 md_bg_color: "#2c4591"
                                 #background_normal
                                 size_hint: 0.3, 0.1
-                                pos_hint:{"center_x": 0.33, "center_y": 0.20}
+                                pos_hint:{"center_x": 0.33, "center_y": 0.13}
+                                on_release: root.go_to_web2()
                             MDFillRoundFlatButton:
                                 text: "Add to Cart"
                                 text_color: 1,1,1,1
                                 md_bg_color: "#2c4591"
                                 size_hint: 0.3, 0.1
-                                pos_hint: {"center_x": 0.67, "center_y": 0.20}
+                                pos_hint: {"center_x": 0.67, "center_y": 0.13}
                             Button:
                                 text: "Back to findings"
                                 underline: True
                                 font_size: 13
                                 size_hint: 0.6, 0.10
-                                pos_hint:{"center_x": 0.5,"center_y": 0.1}
+                                pos_hint:{"center_x": 0.5,"center_y": 0.05}
                                 background_color: (133/255,225/255,189/255,0)
                                 color: (92/255, 94/255, 94/255,1)
                                 on_release:

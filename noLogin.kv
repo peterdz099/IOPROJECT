@@ -46,29 +46,28 @@
                             pos_hint:{"x": 0.4,"y": -0.4}
 
                         Check:
-                            active: True
                             pos_hint: {'center_x': .8, 'center_y': .52}
-                            on_active: root.allegro_mode=0
+                            on_active: root.change_mode(0)
                         MDLabel:
-                            text: "W KAŻDYM SKLEPIE"
+                            text: "Every store"
                             font_size: 16
                             halign: 'left'
                             pos_hint:{"x": 0.18,'center_y': .52}
 
                         Check:
                             pos_hint: {'center_x': .8, 'center_y': .42}
-                            on_active: root.allegro_mode=1
+                            on_active: root.change_mode(1)
                         MDLabel:
-                            text: "TYLKO ALLEGRO"
+                            text: "Only Allegro"
                             font_size: 16
                             halign: 'left'
                             pos_hint:{"x": 0.18,'center_y': .42}
 
                         Check:
                             pos_hint: {'center_x': .8, 'center_y': .32}
-                            on_active: root.allegro_mode=2
+                            on_active: root.change_mode(2)
                         MDLabel:
-                            text: "WSZYSTKO POZA ALLEGRO"
+                            text: "Every store except Allegro"
                             font_size: 16
                             halign: 'left'
                             pos_hint:{"x": 0.18,'center_y': .32}
@@ -139,8 +138,8 @@
                             size_hint: 0.18, 0.1333
                             md_bg_color: "#2c4591"
                             on_release:
-                                #root.clear()
-                                screen_manager.current = 'screeen1'
+                                root.clear()
+                                #screen_manager.current = 'screeen1'
                                 screen_manager.transition.direction = "up"
 
                     Screen:
@@ -163,7 +162,7 @@
                                 id: img
                                 #source: "https://image.ceneostatic.pl/data/products/81792763/f-fisher-price-imaginext-toy-story-4-figurki-chudy-i-forky-gbg90.jpg"
                                 size_hint: 0.45,0.3
-                                pos_hint: {"center_x": 0.5, "center_y": 0.70}
+                                pos_hint: {"center_x": 0.5, "center_y": 0.66}
 
                             MDTextField:
                                 id: details
@@ -173,8 +172,8 @@
                                 halign: "center"
                                 valign: 'middle'
                                 multiline: True
-                                size_hint: 0.7, 0.3
-                                pos_hint:{"center_x": 0.5, "center_y": 0.37}
+                                size_hint: 0.7, 0.25
+                                pos_hint:{"center_x": 0.5, "center_y": 0.32}
 
                             MDFillRoundFlatButton:
                                 text: "Go to website"
@@ -182,13 +181,9 @@
                                 md_bg_color: "#2c4591"
                                 #background_normal
                                 size_hint: 0.3, 0.1
-                                pos_hint:{"center_x": 0.33, "center_y": 0.15}
-                            MDFillRoundFlatButton:
-                                text: "Add to Cart"
-                                text_color: 1,1,1,1
-                                md_bg_color: "#2c4591"
-                                size_hint: 0.3, 0.1
-                                pos_hint: {"center_x": 0.67, "center_y": 0.15}
+                                pos_hint:{"center_x": 0.5, "center_y": 0.12}
+                                on_release: root.go_to_web()
+
 
                             Button:
                                 text: "Back to findings"

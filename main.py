@@ -12,14 +12,16 @@ from database_handler.search_history import SearchHistory
 from database_handler.shopping_list import ShoppingList
 from database_handler.users import Users
 from database_handler.users import is_pwd_correct
+import webbrowser
 import random
 
 
 # from file_manager import load_file_and_save_to_csv
+from file_manager import load_file_and_save_to_csv
 
 
 def create_details_string(name, price, manu, shops):
-    s = f"\n\n\t\tNAME: {name} \n\t\tPRICE: {price}\n\t\tMANUFACTURER: {manu}\n\t\tNUMBER OF SHOPS: {shops}\n\t\t"
+    s = f"\n\tNAME: {name} \n\tPRICE: {price}\n\tMANUFACTURER: {manu}\n\tNUMBER OF SHOPS: {shops}\n\t"
     return s
 
 
@@ -133,6 +135,11 @@ class RegisterWindow(Screen):
 
 class MainWindow(Screen):
     user_id = None
+    obj = None
+    obj2 = None
+    allegro_mode = 0
+    url_helper = ""
+    url_helper2 = ""
 
     def set_name(self, name, idu):
         self.ids.username.text = "You are logged as: " + name
@@ -184,77 +191,131 @@ class MainWindow(Screen):
         print(self.ids.find.text)
         search = self.ids.find.text
 
+
         if any(c.isalpha() for c in search):
-            historyResources.add_search_history(MainWindow.user_id, search)
-            self.clear_history()
-            self.history(MainWindow.user_id)
-            self.ids.screen_manager.current = "screeen2"
-            for i in range(4):
-                self.ids.scroll.add_widget(ThreeLineAvatarIconListItem(text=f"{self.ids.find.text}: {i}",
-                                                                       secondary_text="Secondary text here",
-                                                                       tertiary_text="fit more text than usual",
-                                                                       id=f"{i}",
-                                                                       on_release=(lambda x: self.to_product(int(x.id)))))
-            self.ids.set.text = "Findings of: " + self.ids.find.text
+            toy_list = webscraper.scraper(search, MainWindow.allegro_mode)
+            if len(toy_list):
+                historyResources.add_search_history(MainWindow.user_id, search)
+                self.clear_history()
+                self.history(MainWindow.user_id)
+                self.ids.screen_manager.current = "screeen2"
+
+                for i in range(10 if len(toy_list) > 10 else len(toy_list)):
+                    self.ids.scroll.add_widget(TwoLineAvatarListItem(
+                        ImageLeftWidget(
+                            source=f"https:{toy_list[i].photo_url}"),
+                        text=toy_list[i].name,
+                        secondary_text=f"https://www.ceneo.pl/{toy_list[i].id}",
+                        id=f"{i}",
+                        on_release=(lambda x: self.to_product(toy_list[int(x.id)]))
+                    ))
+
+                self.ids.set.text = "Findings of: " + self.ids.find.text
+            else:
+                print("DOESN'T EXISTS")
         else:
+            self.ids.find.text = ""
             print("EMPTY")
 
     def search_from_file(self):
+        offer_list = load_file_and_save_to_csv()
         self.ids.screen_manager_2.current = "s2"
-        for i in range(4):
-            self.ids.scroll2.add_widget(OneLineListItem(text=f"pitok: {i}",
-                                                        on_release=lambda x: self.to_file_product()))
+        for i in range(len(offer_list)):
+            if not isinstance(offer_list[i], str):
+                self.ids.scroll2.add_widget(TwoLineAvatarListItem(
+                    ImageLeftWidget(
+                        source=f"https:{offer_list[i].photo_url}"),
+                    text=offer_list[i].name,
+                    secondary_text=f"https://www.ceneo.pl/{offer_list[i].id}",
+                    id=f"{i}",
+                    on_release=(lambda x: self.to_file_product(offer_list[int(x.id)]))
+                ))
+            else:
+                self.ids.scroll2.add_widget(OneLineListItem(text=offer_list[i]))
 
-    def handle_import_button_pressed(self):
-        # offer_list = load_file_and_save_to_csv()
-        pass
+    def change_mode(self, mode):
+        MainWindow.allegro_mode = mode
+        print(MainWindow.allegro_mode)
 
     def to_product(self, obj):
-        print("asd,obj:  ",obj)
+        MainWindow.obj = obj
+        string = create_details_string(obj.name, obj.min_price, obj.manufacturer, obj.shop_num)
+        #MainWindow.url_helper = f"https://www.ceneo.pl/{obj.id}"
         self.ids.screen_manager.current = "screeen3"
+        self.ids.details.text = string
         self.ids.screen_manager.transition.direction = "down"
+        self.ids.img.source = f"https:{obj.photo_url}"
 
-    def to_file_product(self):
+    def to_file_product(self, obj):
+        MainWindow.obj2 = obj
+        string = create_details_string(obj.name, obj.min_price, obj.manufacturer, obj.shop_num)
+        #MainWindow.url_helper2 = f"https://www.ceneo.pl/{obj.id}"
         self.ids.screen_manager_2.current = "s3"
+        self.ids.details2.text = string
         self.ids.screen_manager_2.transition.direction = "down"
+        self.ids.img2.source = f"https:{obj.photo_url}"
+
+    def add_to_basket(self):
+        pass
+
+    def go_to_web(self):
+        webbrowser.open(f"https://www.ceneo.pl/{MainWindow.obj.id}")
+
+    def go_to_web2(self):
+        webbrowser.open(f"https://www.ceneo.pl/{MainWindow.obj2.id}")
 
 
 class WithoutLoginWindow(Screen):
     allegro_mode = 0
+    url_helper = ""
 
     def search(self):
         print(self.ids.find.text)
         s = self.ids.find.text
-        toy_list = webscraper.scraper(s, WithoutLoginWindow.allegro_mode)
-        print(toy_list)
 
         if any(c.isalpha() for c in s):
             self.ids.screen_manager.current = "screeen2"
 
-            for i in range(10):
-                self.ids.scroll.add_widget(TwoLineAvatarListItem(
-                    ImageLeftWidget(
-                        source=f"https:{toy_list[i].photo_url}"),
-                    text=toy_list[i].name,
-                    secondary_text=f"https://www.ceneo.pl/{toy_list[i].id}",
-                    id=f"{i}",
-                    on_release=(lambda x: self.to_product(toy_list[int(x.id)]))
-                ))
-            self.ids.set.text = "Findings of: " + self.ids.find.text
+            toy_list = webscraper.scraper(s, WithoutLoginWindow.allegro_mode)
+            if len(toy_list):
+                for i in range(10 if len(toy_list) > 10 else len(toy_list)):
+                    self.ids.scroll.add_widget(TwoLineAvatarListItem(
+                        ImageLeftWidget(
+                            source=f"https:{toy_list[i].photo_url}"),
+                        text=toy_list[i].name,
+                        secondary_text=f"https://www.ceneo.pl/{toy_list[i].id}",
+                        id=f"{i}",
+                        on_release=(lambda x: self.to_product(toy_list[int(x.id)]))
+                    ))
+                self.ids.set.text = "Findings of: " + self.ids.find.text
+            else:
+                "Doesn't exists"
         else:
             self.ids.find.text = ""
             print("EMPTY")
 
     def clear_details(self):
-        self.ids.details.text=""
-        #self.ids.img.source = ""
+        self.ids.details.text = ""
+
+    def clear(self):
+        self.ids.scroll.clear_widgets()
+        self.ids.screen_manager.current = "screeen1"
 
     def to_product(self, obj):
         print(obj)
+        WithoutLoginWindow.url_helper = f"https://www.ceneo.pl/{obj.id}"
         string = create_details_string(obj.name, obj.min_price, obj.manufacturer, obj.shop_num)
         self.ids.screen_manager.current = "screeen3"
         self.ids.details.text = string
         self.ids.img.source = f"https:{obj.photo_url}"
+
+    @staticmethod
+    def change_mode(mode):
+        WithoutLoginWindow.allegro_mode = mode
+        print(WithoutLoginWindow.allegro_mode)
+
+    def go_to_web(self):
+        webbrowser.open(WithoutLoginWindow.url_helper)
 
 
 class WindowManager(ScreenManager):
@@ -286,7 +347,7 @@ class MyApp(MDApp):
         Builder.load_file('verifyWindow.kv')
         sm.add_widget(VerifyWindow(name="verify"))
 
-        sm.current = "login"
+        sm.current = "main"
 
         return sm
 

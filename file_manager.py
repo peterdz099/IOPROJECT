@@ -19,10 +19,14 @@ def load_file_and_save_to_csv():
     for search in listing:
         search = search.replace(' ', '+')
         ws = scraper(search, 0)
-        ws.sort(key=lambda t: t.min_price)
-        offer_list.append(ws[0])
-    df = pd.DataFrame([delete_columns(vars(s)) for s in offer_list])
-    df.to_csv('wyniki.csv')
+        if ws:
+            ws.sort(key=lambda t: t.min_price)
+            offer_list.append(ws[0])
+        else:
+            offer_list.append("NOT FOUND")
+
+    #df = pd.DataFrame([delete_columns(vars(s)) for s in offer_list])
+    #df.to_csv('wyniki.csv')
     return offer_list
 
 

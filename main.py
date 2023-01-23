@@ -230,6 +230,7 @@ class MainWindow(Screen):
 
         if any(c.isalpha() for c in search):
             toy_list = webscraper.scraper(search, MainWindow.allegro_mode)
+            print(toy_list)
             if len(toy_list):
                 historyResources.add_search_history(MainWindow.user_id, search)
                 self.clear_history()

@@ -146,37 +146,59 @@
                     Screen:
                         name: "screeen3"
 
-                        MDTextField:
-                            id: set
-                            disabled: True
-                            multiline : False
-                            halign: "center"
-                            valign: "center"
-                            mode: "rectangle"
-                            bg_color: 0,0,0,1
-                            multiline: False
-                            size_hint: 0.7, 0.12
-                            pos_hint:{"x": 0.15,"y": 0.85}
+                        FloatLayout:
+                            MDTextField:
+                                text: "DETAILS"
+                                disabled: True
+                                multiline : False
+                                halign: "center"
+                                valign: "center"
+                                mode: "rectangle"
+                                bg_color: 0,0,0,1
+                                multiline: False
+                                size_hint: 0.7, 0.12
+                                pos_hint:{"x": 0.15,"y": 0.85}
 
-                        MDCard:
-                            md_bg_color: 1,1,1,1
-                            orientation: "vertical"
-                            padding: "8dp"
-                            size_hint: 0.8, 0.8
-                            pos_hint: {"center_x": 0.5, "center_y": 0.43}
-                            FloatLayout:
-                                MDTextField:
-                                    text: "DUPSKO"
+                            ImageLeftWidget:
+                                id: img
+                                #source: "https://image.ceneostatic.pl/data/products/81792763/f-fisher-price-imaginext-toy-story-4-figurki-chudy-i-forky-gbg90.jpg"
+                                size_hint: 0.45,0.3
+                                pos_hint: {"center_x": 0.5, "center_y": 0.70}
 
-                                MDFlatButton:
-                                    text: "add to basek"
-                                    text_color: 1,1,1,1
-                                    md_bg_color: 1,1,0,1
-                                    size_hint: 0.5, 0.5
-                                    pos_hint:{"center_x": 0.4, "center_y": 0.43}
-                                MDFlatButton:
-                                    text: "cos tam cos tam"
-                                    text_color: 1,1,1,1
-                                    md_bg_color: 1,1,0,1
-                                    size_hint: 0.5, 0.5
-                                    pos_hint: {"center_x": 0.2, "center_y": 0.43}
+                            MDTextField:
+                                id: details
+                                text_color: 0,0,0,1
+                                font_size: 12
+                                mode: "rectangle"
+                                halign: "center"
+                                valign: 'middle'
+                                multiline: True
+                                size_hint: 0.7, 0.3
+                                pos_hint:{"center_x": 0.5, "center_y": 0.37}
+
+                            MDFillRoundFlatButton:
+                                text: "Go to website"
+                                text_color: 1,1,1,1
+                                md_bg_color: "#2c4591"
+                                #background_normal
+                                size_hint: 0.3, 0.1
+                                pos_hint:{"center_x": 0.33, "center_y": 0.15}
+                            MDFillRoundFlatButton:
+                                text: "Add to Cart"
+                                text_color: 1,1,1,1
+                                md_bg_color: "#2c4591"
+                                size_hint: 0.3, 0.1
+                                pos_hint: {"center_x": 0.67, "center_y": 0.15}
+
+                            Button:
+                                text: "Back to findings"
+                                underline: True
+                                font_size: 13
+                                size_hint: 0.6, 0.10
+                                pos_hint:{"center_x": 0.5,"center_y": 0.05}
+                                background_color: (133/255,225/255,189/255,0)
+                                color: (92/255, 94/255, 94/255,1)
+                                on_release:
+                                    screen_manager.current = "screeen2"
+                                    root.clear_details()
+                                    screen_manager.transition.direction = "up"

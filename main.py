@@ -15,11 +15,12 @@ from database_handler.users import is_pwd_correct
 import random
 
 
-
 # from file_manager import load_file_and_save_to_csv
 
-def create_details_string():
-    pass
+
+def create_details_string(name, price, manu, shops):
+    s = f"\n\n\t\tNAME: {name} \n\t\tPRICE: {price}\n\t\tMANUFACTURER: {manu}\n\t\tNUMBER OF SHOPS: {shops}\n\t\t"
+    return s
 
 
 class VerifyWindow(Screen):
@@ -189,10 +190,11 @@ class MainWindow(Screen):
             self.history(MainWindow.user_id)
             self.ids.screen_manager.current = "screeen2"
             for i in range(4):
-                self.ids.scroll.add_widget(ThreeLineAvatarIconListItem(text=self.ids.find.text,
+                self.ids.scroll.add_widget(ThreeLineAvatarIconListItem(text=f"{self.ids.find.text}: {i}",
                                                                        secondary_text="Secondary text here",
                                                                        tertiary_text="fit more text than usual",
-                                                                       on_release=lambda x: self.to_product()))
+                                                                       id=f"{i}",
+                                                                       on_release=(lambda x: self.to_product(int(x.id)))))
             self.ids.set.text = "Findings of: " + self.ids.find.text
         else:
             print("EMPTY")
@@ -207,7 +209,8 @@ class MainWindow(Screen):
         # offer_list = load_file_and_save_to_csv()
         pass
 
-    def to_product(self):
+    def to_product(self, obj):
+        print("asd,obj:  ",obj)
         self.ids.screen_manager.current = "screeen3"
         self.ids.screen_manager.transition.direction = "down"
 
@@ -223,6 +226,7 @@ class WithoutLoginWindow(Screen):
         print(self.ids.find.text)
         s = self.ids.find.text
         toy_list = webscraper.scraper(s, WithoutLoginWindow.allegro_mode)
+        print(toy_list)
 
         if any(c.isalpha() for c in s):
             self.ids.screen_manager.current = "screeen2"
@@ -231,19 +235,26 @@ class WithoutLoginWindow(Screen):
                 self.ids.scroll.add_widget(TwoLineAvatarListItem(
                     ImageLeftWidget(
                         source=f"https:{toy_list[i].photo_url}"),
-                    text=toy_list[i].name, secondary_text=f"https://www.ceneo.pl/{toy_list[i].id}",
-                    on_release=lambda x: self.to_product()
+                    text=toy_list[i].name,
+                    secondary_text=f"https://www.ceneo.pl/{toy_list[i].id}",
+                    id=f"{i}",
+                    on_release=(lambda x: self.to_product(toy_list[int(x.id)]))
                 ))
             self.ids.set.text = "Findings of: " + self.ids.find.text
         else:
             self.ids.find.text = ""
             print("EMPTY")
 
-    def clear(self):
-        pass
+    def clear_details(self):
+        self.ids.details.text=""
+        #self.ids.img.source = ""
 
-    def to_product(self):
+    def to_product(self, obj):
+        print(obj)
+        string = create_details_string(obj.name, obj.min_price, obj.manufacturer, obj.shop_num)
         self.ids.screen_manager.current = "screeen3"
+        self.ids.details.text = string
+        self.ids.img.source = f"https:{obj.photo_url}"
 
 
 class WindowManager(ScreenManager):
@@ -281,8 +292,8 @@ class MyApp(MDApp):
 
 
 if __name__ == '__main__':
-    Config.set('graphics', 'width', '600')
-    Config.set('graphics', 'height', '800')
+    Config.set('graphics', 'width', '400')
+    Config.set('graphics', 'height', '600')
     Config.set('graphics', 'resizable', False)
     Config.write()
     MyApp().run()

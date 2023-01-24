@@ -70,7 +70,6 @@
                             active: True
                             pos_hint: {'center_x': .8, 'center_y': .52}
 
-
                         MDLabel:
                             text: "Every store"
                             font_size: 16
@@ -164,11 +163,12 @@
                                 MDList:
                                     id: scroll
 
-                        MDFloatingActionButton:
+                        MDIconButton:
                             icon: "arrow-down-thick"
-                            icon_color: (1,1,1,1)
+                            theme_icon_color: "Custom"
+                            icon_color: 1,1,1,1
+                            icon_size: "40sp"
                             pos_hint:{"x":0.80,"y":0.04}
-                            size_hint: 0.18, 0.1333
                             md_bg_color: "#2c4591"
                             on_release:
                                 root.clear_findings()
@@ -258,7 +258,7 @@
                             text: "Import .csv file with shopping list!"
                             font_size: 14
                             halign: 'center'
-                            pos_hint:{"x": 0,"y": 0.1}
+                            pos_hint:{"x": 0,"y": 0.2}
 
                         Image:
                             source: 'resources/big ball.png'
@@ -275,64 +275,64 @@
 
                         check_file_mode:
                             active: True
-                            pos_hint: {'center_x': .8, 'center_y': .52}
+                            pos_hint: {'center_x': .8, 'center_y': .57}
 
                         MDLabel:
                             text: "Every store"
                             font_size: 16
                             halign: 'left'
-                            pos_hint:{"x": 0.18,'center_y': .52}
+                            pos_hint:{"x": 0.18,'center_y': .57}
 
                         check_file_mode:
-                            pos_hint: {'center_x': .8, 'center_y': .47}
+                            pos_hint: {'center_x': .8, 'center_y': .52}
                             on_active: root.change_file_mode(1)
 
                         MDLabel:
                             text: "Only Allegro"
                             font_size: 16
                             halign: 'left'
-                            pos_hint:{"x": 0.18,'center_y': .47}
+                            pos_hint:{"x": 0.18,'center_y': .52}
 
                         check_file_mode:
-                            pos_hint: {'center_x': .8, 'center_y': .42}
+                            pos_hint: {'center_x': .8, 'center_y': .47}
                             on_active: root.change_file_mode(2)
                         MDLabel:
                             text: "Every store except Allegro"
                             font_size: 16
                             halign: 'left'
-                            pos_hint:{"x": 0.18,'center_y': .42}
+                            pos_hint:{"x": 0.18,'center_y': .47}
 
                         check_file_sort:
                             active: True
-                            pos_hint: {'center_x': .8, 'center_y': .32}
+                            pos_hint: {'center_x': .8, 'center_y': .37}
                             on_active: root.change_file_sort_mode(False)
 
                         MDLabel:
                             text: "Sort by price"
                             font_size: 16
                             halign: 'left'
-                            pos_hint:{"x": 0.18,'center_y': .32}
+                            pos_hint:{"x": 0.18,'center_y': .37}
 
                         check_file_sort:
-                            pos_hint: {'center_x': .8, 'center_y': .27}
+                            pos_hint: {'center_x': .8, 'center_y': .32}
                             on_active: root.change_file_sort_mode(True)
 
                         MDLabel:
                             text: "Sort by shop number"
                             font_size: 16
                             halign: 'left'
-                            pos_hint:{"x": 0.18,'center_y': .27}
-
+                            pos_hint:{"x": 0.18,'center_y': .32}
 
                         MDFillRoundFlatButton:
                             text: "Import file"
                             font_size: 16
                             size_hint: 0.6, 0.10
-                            pos_hint:{"x":0.2,"y": 0.18}
+                            pos_hint:{"x":0.2,"y": 0.1}
                             md_bg_color: "#2c4591"
                             on_release:
                                 root.search_from_file()
                                 screen_manager_2.transition.direction = "down"
+
                     Screen:
                         name: "s2"
 
@@ -358,12 +358,12 @@
                                 MDList:
                                     id: scroll2
 
-                        MDFloatingActionButton:
+                        MDIconButton:
                             icon: "arrow-down-thick"
                             icon_color: (1,1,1,1)
-                            pos_hint:{"x":0.80,"y":0.04}
-                            size_hint: 0.18, 0.1333
+                            icon_size: "35sp"
                             md_bg_color: "#2c4591"
+                            pos_hint:{"x":0.80,"y":0.04}
                             on_release:
                                 root.clear_file_findings()
                                 screen_manager_2.transition.direction = "up"

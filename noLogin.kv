@@ -82,6 +82,7 @@
                         check_sort:
                             active: True
                             pos_hint: {'center_x': .8, 'center_y': .32}
+                            on_release: root.change_sort_mode(False)
 
                         MDLabel:
                             text: "Sort by price"
@@ -155,11 +156,11 @@
                                 MDList:
                                     id: scroll
 
-                        MDFloatingActionButton:
+                        MDIconButton:
                             icon: "arrow-down-thick"
                             icon_color: (1,1,1,1)
                             pos_hint:{"x":0.80,"y":0.04}
-                            size_hint: 0.18, 0.1333
+                            icon_size: "35sp"
                             md_bg_color: "#2c4591"
                             on_release:
                                 root.clear()

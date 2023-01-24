@@ -247,9 +247,11 @@ class MainWindow(Screen):
         else:
             self.ids.scroll_cart.add_widget(OneLineListItem(text="              Your cart list is empty")),
 
-    def import_cart_to_file(self):
-        basket = shoppingListResources.select_shopping_list(MainWindow.user_id)
-        if basket:
+    # def import_cart_to_file(self):
+    #     basket = shoppingListResources.select_shopping_list(MainWindow.user_id)
+    #     basket_list = []
+    #     if basket:
+    #
 
     def search(self):
 
@@ -284,7 +286,7 @@ class MainWindow(Screen):
             self.ids.message.text = "Type a name of the toy!"
 
     def search_from_file(self):
-        offer_list = load_file_and_save_to_csv()
+        offer_list = load_file_and_save_to_csv(MainWindow.file_mode,MainWindow.file_sort_mode)
         self.ids.screen_manager_2.current = "s2"
         for i in range(len(offer_list)):
             if not isinstance(offer_list[i], str):

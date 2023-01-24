@@ -99,7 +99,7 @@ class Toy:
                         self.shop_list[0].deliver_method.append(line)
 
 
-def scraper(name, mode, sort_by_num_shops, page=1, ):
+def scraper(name, mode, sort_by_num_shops, page=1):
     # mode 0 -> szukaj wszystko
     # mode 1 -> szukaj tylko alegro
     # mode 2 -> szukaj wszystko tylko nie allegro

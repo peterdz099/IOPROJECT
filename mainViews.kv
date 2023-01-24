@@ -69,6 +69,7 @@
                         Check:
                             active: True
                             pos_hint: {'center_x': .8, 'center_y': .52}
+                            on_release: root.change_mode(0)
 
                         MDLabel:
                             text: "Every store"
@@ -276,6 +277,7 @@
                         check_file_mode:
                             active: True
                             pos_hint: {'center_x': .8, 'center_y': .57}
+                            on_active: root.change_file_mode(0)
 
                         MDLabel:
                             text: "Every store"
@@ -361,6 +363,7 @@
                         MDIconButton:
                             icon: "arrow-down-thick"
                             icon_color: (1,1,1,1)
+                            theme_icon_color: "Custom"
                             icon_size: "35sp"
                             md_bg_color: "#2c4591"
                             pos_hint:{"x":0.80,"y":0.04}
@@ -377,7 +380,7 @@
                                 pos_hint: {"center_x": 0.5, "center_y": 0.8}
 
                                 AsyncImage:
-                                    id: img
+                                    id: img2
                                     allow_stretch: True
 
                             MDTextField:

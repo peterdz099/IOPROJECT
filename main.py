@@ -178,6 +178,8 @@ class MainWindow(Screen):
     obj = None
     obj2 = None
     sort_mode = False
+    file_mode = 0
+    file_sort_mode = False
     allegro_mode = 0
     url_helper = ""
     url_helper2 = ""
@@ -218,6 +220,7 @@ class MainWindow(Screen):
     def delete_user_cart(self):
         shoppingListResources.delete_shopping_list(MainWindow.user_id)
         self.clear_basket()
+        self.cart()
 
 
     def history(self, user_id):
@@ -300,17 +303,28 @@ class MainWindow(Screen):
         print(MainWindow.allegro_mode)
 
     @staticmethod
+    def change_file_mode(mode):
+        MainWindow.file_mode = mode
+        print(MainWindow.file_mode)
+
+    @staticmethod
     def change_sort_mode(mode):
         MainWindow.sort_mode = mode
         print(MainWindow.sort_mode)
 
+    @staticmethod
+    def change_file_sort_mode(mode):
+        MainWindow.file_sort_mode = mode
+        print(MainWindow.file_sort_mode)
+
     def to_product(self, obj):
+        print(obj)
         MainWindow.obj = obj
         string = create_details_string(obj.name, obj.min_price, obj.manufacturer, obj.shop_num, obj.shop_list)
         self.ids.screen_manager.current = "screeen3"
         self.ids.details.text = string
         self.ids.screen_manager.transition.direction = "down"
-        self.ids.img.source = f"https:{obj.photo_url}"
+        self.ids.imga.source = f"https:{obj.photo_url}"
 
     def to_file_product(self, obj):
         MainWindow.obj2 = obj

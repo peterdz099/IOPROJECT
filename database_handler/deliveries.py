@@ -2,6 +2,7 @@ from database_handler.initialize_database import Database
 from mysql.connector import Error
 
 
+# Managing deliveries table
 class Deliveries:
     def __init__(self, database: Database):
         self.connection = database.get_connection()
@@ -13,7 +14,7 @@ class Deliveries:
                 VALUES (%s, %s, %s)
                 """
 
-        delivery_record = (price, deliverer, offer_id)
+        delivery_record = (price, deliverer, offer_id)  # arguments passed as query values
 
         try:
             with self.connection.cursor() as cursor:
@@ -22,6 +23,7 @@ class Deliveries:
         except Error as e:
             print(e)
 
+    # Returns deliveries rows with specified offer_id
     def select_deliveries(self, offer_id) -> list[dict]:
         select_deliveries_query = """
                         SELECT * FROM deliveries
@@ -35,7 +37,8 @@ class Deliveries:
                 fetched_records = cursor.fetchall()
                 if fetched_records is not None:
                     for row in fetched_records:
-                        record = {'price': row[0], 'deliverer': row[1], 'offer_id': row[2]}
+                        record = {'price': row[0], 'deliverer': row[1],
+                                  'offer_id': row[2]}  # dict containing single row data
                         output.append(record)
                     return output
                 else:

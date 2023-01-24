@@ -26,6 +26,7 @@ def load_file_and_save_to_csv(mode, sort_mode):
 
     #df = pd.DataFrame([delete_columns(vars(s)) for s in offer_list])
     #df.to_csv('wyniki.csv')
+    # test
     return offer_list
 
 

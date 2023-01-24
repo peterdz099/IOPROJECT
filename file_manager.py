@@ -15,10 +15,10 @@ def load_file_and_save_to_csv(mode, sort_mode):
     if filename == '':
         return []
 
-    offer_list = []
+
     try:
         listing = pd.read_csv(filename, header=None).iloc[:, 0].tolist()
-
+        offer_list = []
         for search in listing:
             search = search.replace(' ', '+')
             ws = scraper(search, mode, sort_mode)
@@ -26,10 +26,8 @@ def load_file_and_save_to_csv(mode, sort_mode):
                 offer_list.append(ws[0])
             else:
                 offer_list.append("NOT FOUND")
-            print(offer_list)
-            return offer_list
+        return offer_list
     except pd.errors.EmptyDataError:
-        print(offer_list)
         return offer_list
 
     # df = pd.DataFrame([delete_columns(vars(s)) for s in offer_list])

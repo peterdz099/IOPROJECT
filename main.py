@@ -22,7 +22,7 @@ import ssl
 import smtplib
 
 # from file_manager import load_file_and_save_to_csv
-from file_manager import load_file_and_save_to_csv
+from file_manager import load_file_and_save_to_csv, save_cart_to_file
 
 
 def create_details_string(name, price, manu, shops, shop_list):
@@ -58,9 +58,7 @@ class VerifyWindow(Screen):
         email_sender = "toysapp8@gmail.com"
         email_password = os.environ.get("EMAIL_PASSWORD")
 
-        #email_receiver = VerifyWindow.email_or_username
-
-        email_receiver = "akljsdhgfkhasdfjkhgsadkjfhgaksjdh@gmail.com"
+        email_receiver = VerifyWindow.email_or_username
 
         subject = "Verification Code"
 
@@ -86,7 +84,7 @@ class VerifyWindow(Screen):
         self.ids.code.text = ""
         VerifyWindow.generated_code = None
         VerifyWindow.email_or_username = ""
-        sm.current= "login"
+        sm.current = "login"
 
 
 class LoginWindow(Screen):
@@ -104,14 +102,17 @@ class LoginWindow(Screen):
                 sm.get_screen("main").cart()
                 self.reset()
                 sm.current = "main"
-
             else:
                 self.ids.login_message.text = "BAD PASSWORD"
+
         elif dictionary and dictionary.get('is_verified') == 0:
-            sm.get_screen("verify").set_user(dictionary.get('email'))
-            sm.get_screen("verify").send_email()
-            self.reset()
-            sm.current = "verify"
+            if is_pwd_correct(self.password.text, dictionary.get('password')):
+                sm.get_screen("verify").set_user(dictionary.get('email'))
+                sm.get_screen("verify").send_email()
+                self.reset()
+                sm.current = "verify"
+            else:
+                self.ids.login_message.text = "BAD PASSWORD"
         else:
             self.ids.login_message.text = "USER NOT FOUND"
 
@@ -122,7 +123,7 @@ class LoginWindow(Screen):
     def reset(self):
         self.email.text = ""
         self.password.text = ""
-        self.ids.login_message.text = "Login in or create new account"
+        self.ids.login_message.text = "Log in or create new account"
 
     def without(self):
         self.reset()
@@ -249,11 +250,20 @@ class MainWindow(Screen):
         else:
             self.ids.scroll_cart.add_widget(OneLineListItem(text="              Your cart list is empty")),
 
-    # def import_cart_to_file(self):
-    #     basket = shoppingListResources.select_shopping_list(MainWindow.user_id)
-    #     basket_list = []
-    #     if basket:
-    #
+    @staticmethod
+    def import_cart_to_file():
+        basket = shoppingListResources.select_shopping_list(MainWindow.user_id)
+        basket_list = []
+        if basket:
+            for i in range(len(basket)):
+                offer = offersResources.select_offer(basket[i].get('offer_id'))
+                offer_data = {'Name': offer.get('toy_name'), 'PRICE': offer.get('price'), 'URL': offer.get('url')}
+                basket_list.append(offer_data)
+        else:
+            print(basket)
+
+        save_cart_to_file(basket_list)
+
 
     def search(self):
 
@@ -288,7 +298,7 @@ class MainWindow(Screen):
             self.ids.message.text = "Type a name of the toy!"
 
     def search_from_file(self):
-        offer_list = load_file_and_save_to_csv(MainWindow.file_mode,MainWindow.file_sort_mode)
+        offer_list = load_file_and_save_to_csv(MainWindow.file_mode, MainWindow.file_sort_mode)
         self.ids.screen_manager_2.current = "s2"
         for i in range(len(offer_list)):
             if not isinstance(offer_list[i], str):

@@ -454,12 +454,12 @@
                         id: scroll_cart
 
             MDFillRoundFlatButton:
-                text: "Import to file"
+                text: "Export to file"
                 text_color: 1,1,1,1
                 md_bg_color: "#2c4591"
                 size_hint: 0.3, 0.08
                 pos_hint:{"center_x": 0.33, "center_y": 0.08}
-                on_release: root.go_to_web()
+                on_release: root.import_cart_to_file()
 
             MDFillRoundFlatButton:
                 text: "Clear Basket"

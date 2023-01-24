@@ -30,6 +30,5 @@ def load_file_and_save_to_csv(mode, sort_mode):
 
 
 def save_cart_to_file(offer_list):
-    list = [{'name': 'a', 'price': 100, 'url': 'xd'},{'name': 'a', 'price': 100, 'url': 'xd'},{'name': 'a', 'price': 1000, 'url': 'xd'}]
-    df = pd.DataFrame([delete_columns(vars(s)) for s in offer_list])
+    df = pd.DataFrame(offer_list)
     df.to_csv('koszyk.csv')

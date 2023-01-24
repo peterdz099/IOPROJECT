@@ -58,9 +58,9 @@ class VerifyWindow(Screen):
         email_sender = "toysapp8@gmail.com"
         email_password = os.environ.get("EMAIL_PASSWORD")
 
-        email_receiver = VerifyWindow.email_or_username
+        #email_receiver = VerifyWindow.email_or_username
 
-        # email_receiver = "piotrdziula@gmail.com"
+        email_receiver = "akljsdhgfkhasdfjkhgsadkjfhgaksjdh@gmail.com"
 
         subject = "Verification Code"
 
@@ -86,6 +86,7 @@ class VerifyWindow(Screen):
         self.ids.code.text = ""
         VerifyWindow.generated_code = None
         VerifyWindow.email_or_username = ""
+        sm.current= "login"
 
 
 class LoginWindow(Screen):
@@ -135,6 +136,7 @@ class RegisterWindow(Screen):
     repeatedPassword = ObjectProperty(None)
 
     def submit(self):
+
         if self.username.text != "" and self.email.text != "" and self.password.text != "" \
                 and self.repeatedPassword.text != "":
 
@@ -222,7 +224,6 @@ class MainWindow(Screen):
         self.clear_basket()
         self.cart()
 
-
     def history(self, user_id):
         user_history = historyResources.select_search_history(user_id)
 
@@ -235,7 +236,6 @@ class MainWindow(Screen):
             self.ids.scroll_history.add_widget(OneLineListItem(text='           Your search history is empty')),
 
     def cart(self):
-
         basket = shoppingListResources.select_shopping_list(MainWindow.user_id)
         if basket:
             for i in range(len(basket)):
@@ -249,13 +249,19 @@ class MainWindow(Screen):
         else:
             self.ids.scroll_cart.add_widget(OneLineListItem(text="              Your cart list is empty")),
 
+    # def import_cart_to_file(self):
+    #     basket = shoppingListResources.select_shopping_list(MainWindow.user_id)
+    #     basket_list = []
+    #     if basket:
+    #
+
     def search(self):
 
         print(self.ids.find.text)
         search = self.ids.find.text
 
         if any(c.isalpha() for c in search):
-            toy_list = webscraper.scraper(search, MainWindow.allegro_mode,MainWindow.sort_mode,1)
+            toy_list = webscraper.scraper(search, MainWindow.allegro_mode, MainWindow.sort_mode, 1)
             print(toy_list)
             if len(toy_list):
                 print(f"wyszukujesz w trybie sortowania {MainWindow.sort_mode}")
@@ -282,7 +288,7 @@ class MainWindow(Screen):
             self.ids.message.text = "Type a name of the toy!"
 
     def search_from_file(self):
-        offer_list = load_file_and_save_to_csv()
+        offer_list = load_file_and_save_to_csv(MainWindow.file_mode,MainWindow.file_sort_mode)
         self.ids.screen_manager_2.current = "s2"
         for i in range(len(offer_list)):
             if not isinstance(offer_list[i], str):
@@ -337,7 +343,8 @@ class MainWindow(Screen):
     def add_to_basket(self):
         o = MainWindow.obj
         print(o)
-        offersResources.add_offer(o.id, o.name, o.min_price, f"https://www.ceneo.pl/{o.id}", o.shop_list[0].name, o.manufacturer,
+        offersResources.add_offer(o.id, o.name, o.min_price, f"https://www.ceneo.pl/{o.id}", o.shop_list[0].name,
+                                  o.manufacturer,
                                   o.photo_url)
         shoppingListResources.add_shopping_list(MainWindow.user_id, o.id)
         self.clear_basket()
@@ -346,7 +353,8 @@ class MainWindow(Screen):
     def add_to_basket_from_file(self):
         o = MainWindow.obj2
         print(o)
-        offersResources.add_offer(o.id, o.name, o.min_price, f"https://www.ceneo.pl/{o.id}", o.shop_list[0].name, o.manufacturer,
+        offersResources.add_offer(o.id, o.name, o.min_price, f"https://www.ceneo.pl/{o.id}", o.shop_list[0].name,
+                                  o.manufacturer,
                                   o.photo_url)
         shoppingListResources.add_shopping_list(MainWindow.user_id, o.id)
         self.clear_basket()

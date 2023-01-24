@@ -8,7 +8,7 @@ def delete_columns(dicti):
     return {key: dicti[key] for key in dicti if key not in cols}
 
 
-def load_file_and_save_to_csv():
+def load_file_and_save_to_csv(mode, sort_mode):
     filename = filedialog.askopenfilename(initialdir="c:/pdw",
                                           title="Select a csv file",
                                           filetypes=(("csv files", "*.csv"), ("all files", "*.*")))
@@ -18,9 +18,8 @@ def load_file_and_save_to_csv():
     offer_list = []
     for search in listing:
         search = search.replace(' ', '+')
-        ws = scraper(search, 0)
+        ws = scraper(search, mode, sort_mode)
         if ws:
-            ws.sort(key=lambda t: t.min_price)
             offer_list.append(ws[0])
         else:
             offer_list.append("NOT FOUND")
@@ -31,5 +30,6 @@ def load_file_and_save_to_csv():
 
 
 def save_cart_to_file(offer_list):
+    list = [{'name': 'a', 'price': 100, 'url': 'xd'},{'name': 'a', 'price': 100, 'url': 'xd'},{'name': 'a', 'price': 1000, 'url': 'xd'}]
     df = pd.DataFrame([delete_columns(vars(s)) for s in offer_list])
     df.to_csv('koszyk.csv')

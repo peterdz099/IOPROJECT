@@ -13,7 +13,7 @@ from database_handler.offers import Offers as OffersResource
 #   mode 2 -> szukaj wszystko tylko nie allegro
 # sort_by_num_shops<bool> - określa metode sortowania wyników
 # sort_by_num_shops = True -> sortowanie po ilosci sklepow
-# sort_by_num_shops = False -> od najniższej ceny
+# sort_by_num_shops = False -> od najniższej ceny.
 
 def scraper(name_toy, mode, sort_by_num_shops, page=1):
     name = name_toy.replace(" ", "+")

@@ -21,6 +21,7 @@ class Shop:
                f'price: {self.price}, ' \
                f'url: {self.shop_url} '
 
+
 class Toy:
     def __init__(self, id, name, min_price, manufacturer, shop_num, photo_url):
         self.id = id
@@ -72,7 +73,8 @@ class Toy:
 
         try:
             error = False
-            deliveryURL = "https://www.ceneo.pl/Product/GetOfferDetails?data=" + self.shop_list[0].shop_url.split("?e=")[1]
+            deliveryURL = "https://www.ceneo.pl/Product/GetOfferDetails?data=" + \
+                          self.shop_list[0].shop_url.split("?e=")[1]
 
         except:
             error = True
@@ -87,7 +89,7 @@ class Toy:
             )
 
             for deliver in deliveries:
-                 for item in deliver.find_all("li"):
+                for item in deliver.find_all("li"):
                     productPrice = item.get_text()
                     deliveryInfo = productPrice.replace('\n', '').split("zł")
                     if len(deliveryInfo) > 1:
@@ -96,7 +98,8 @@ class Toy:
                         line.append(deliveryInfo[1])
                         self.shop_list[0].deliver_method.append(line)
 
-def scraper(name, mode, page=1, sort_by_num_shops=False):
+
+def scraper(name, mode, sort_by_num_shops, page=1, ):
     # mode 0 -> szukaj wszystko
     # mode 1 -> szukaj tylko alegro
     # mode 2 -> szukaj wszystko tylko nie allegro
@@ -130,7 +133,8 @@ def scraper(name, mode, page=1, sort_by_num_shops=False):
         if toy_photo_url == None:
             toy_photo_url = item.find('img').get("src")
 
-        toy = Toy(name=toy_name, id=toy_id, min_price=toy_price, manufacturer=toy_manufacturer, shop_num=0, photo_url=toy_photo_url)
+        toy = Toy(name=toy_name, id=toy_id, min_price=toy_price, manufacturer=toy_manufacturer, shop_num=0,
+                  photo_url=toy_photo_url)
         toy.getShopInfo(mode)
         if toy.shop_num != 0:
             toy_list.append(toy)
@@ -140,6 +144,7 @@ def scraper(name, mode, page=1, sort_by_num_shops=False):
         toy_list = sorted(toy_list, key=operator.attrgetter("min_price"))
 
     return toy_list
+
 
 # if __name__ == "__main__":
 #     db = Database()

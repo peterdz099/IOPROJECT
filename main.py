@@ -1,3 +1,4 @@
+from kivy.core.window import Window
 from kivymd.uix.list import OneLineListItem, ThreeLineAvatarIconListItem, TwoLineAvatarListItem, ImageLeftWidget, \
     TwoLineListItem
 from validate_email_address import validate_email
@@ -25,7 +26,7 @@ from file_manager import load_file_and_save_to_csv
 
 
 def create_details_string(name, price, manu, shops, shop_list):
-    s = f"\n\tNAME: {name} \n\tPRICE: {price}\n\tMANUFACTURER: {manu}\n\tNUMBER OF SHOPS: {shops}\n\tBEST SHOP: {shop_list[0].name}\n\tDELIVERY METHOD:\n\t"
+    s = f"\n\tNAME: {name} \n\tPRICE: {price}\n\tMANUFACTURER: {manu}\n\tNUMBER OF SHOPS: {shops}\n\tBEST SHOP: {shop_list[0].name}\n\tDELIVERY METHOD:\n\t "
     d = ""
     for delivery_method in shop_list[0].deliver_method:
         d = d + "\t" + delivery_method[1] + "\t" + str(delivery_method[0]) + "zł" + "\n\t"
@@ -167,6 +168,7 @@ class MainWindow(Screen):
     user_id = None
     obj = None
     obj2 = None
+    sort_mode = False
     allegro_mode = 0
     url_helper = ""
     url_helper2 = ""
@@ -194,12 +196,20 @@ class MainWindow(Screen):
 
     def back_to_login(self):
         self.reset()
+        self.ids.nav.switch_tab('screen 1')
         sm.current = "login"
 
     def reset(self):
+        self.clear_findings()
+        self.clear_file_findings()
         self.clear_search()
         self.clear_basket()
         self.clear_history()
+
+    def delete_user_cart(self):
+        shoppingListResources.delete_shopping_list(MainWindow.user_id)
+        self.clear_basket()
+
 
     def history(self, user_id):
         user_history = historyResources.select_search_history(user_id)
@@ -233,9 +243,10 @@ class MainWindow(Screen):
         search = self.ids.find.text
 
         if any(c.isalpha() for c in search):
-            toy_list = webscraper.scraper(search, MainWindow.allegro_mode)
+            toy_list = webscraper.scraper(search, MainWindow.allegro_mode,MainWindow.sort_mode,1)
             print(toy_list)
             if len(toy_list):
+                print(f"wyszukujesz w trybie sortowania {MainWindow.sort_mode}")
                 historyResources.add_search_history(MainWindow.user_id, search)
                 self.clear_history()
                 self.history(MainWindow.user_id)
@@ -274,9 +285,15 @@ class MainWindow(Screen):
             else:
                 self.ids.scroll2.add_widget(OneLineListItem(text=offer_list[i]))
 
-    def change_mode(self, mode):
+    @staticmethod
+    def change_mode(mode):
         MainWindow.allegro_mode = mode
         print(MainWindow.allegro_mode)
+
+    @staticmethod
+    def change_sort_mode(mode):
+        MainWindow.sort_mode = mode
+        print(MainWindow.sort_mode)
 
     def to_product(self, obj):
         MainWindow.obj = obj
@@ -295,9 +312,9 @@ class MainWindow(Screen):
         self.ids.img2.source = f"https:{obj.photo_url}"
 
     def add_to_basket(self):
-        o = MainWindow.obj2
+        o = MainWindow.obj
         print(o)
-        offersResources.add_offer(o.id, o.name, o.min_price, f"https://www.ceneo.pl/{o.id}", "1", o.manufacturer,
+        offersResources.add_offer(o.id, o.name, o.min_price, f"https://www.ceneo.pl/{o.id}", o.shop_list[0].name, o.manufacturer,
                                   o.photo_url)
         shoppingListResources.add_shopping_list(MainWindow.user_id, o.id)
         self.clear_basket()
@@ -306,7 +323,7 @@ class MainWindow(Screen):
     def add_to_basket_from_file(self):
         o = MainWindow.obj2
         print(o)
-        offersResources.add_offer(o.id, o.name, o.min_price, f"https://www.ceneo.pl/{o.id}", "1", o.manufacturer,
+        offersResources.add_offer(o.id, o.name, o.min_price, f"https://www.ceneo.pl/{o.id}", o.shop_list[0].name, o.manufacturer,
                                   o.photo_url)
         shoppingListResources.add_shopping_list(MainWindow.user_id, o.id)
         self.clear_basket()
@@ -330,7 +347,7 @@ class WithoutLoginWindow(Screen):
 
         if any(c.isalpha() for c in s):
 
-            toy_list = webscraper.scraper(s, WithoutLoginWindow.allegro_mode)
+            toy_list = webscraper.scraper(s, WithoutLoginWindow.allegro_mode, WithoutLoginWindow.sort_mode, 1)
             if len(toy_list):
                 self.ids.find.text = ""
                 self.ids.screen_manager.current = "screeen2"
@@ -394,6 +411,7 @@ db.create_tables()
 
 class MyApp(MDApp):
     def build(self):
+        Window.borderless = True
         self.theme_cls.theme_style = "Light"
 
         Builder.load_file('views.kv')

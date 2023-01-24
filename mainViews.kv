@@ -14,8 +14,10 @@
         orientation: 'vertical'
 
     MDBottomNavigation:
+        id: nav
 
         MDBottomNavigationItem:
+
             name: 'screen 1'
             text: "Search"
             icon: 'magnify'
@@ -86,6 +88,7 @@
                         check_sort:
                             active: True
                             pos_hint: {'center_x': .8, 'center_y': .32}
+                            on_active: root.change_sort_mode(False)
 
                         MDLabel:
                             text: "Sort by price"
@@ -368,7 +371,6 @@
             text: "Cart"
             icon: 'cart'
 
-
             MDTextField:
                 text: "Your Cart"
                 disabled: True
@@ -391,14 +393,22 @@
                 ScrollView:
                     MDList:
                         id: scroll_cart
+
             MDFillRoundFlatButton:
                 text: "Import to file"
                 text_color: 1,1,1,1
                 md_bg_color: "#2c4591"
-                #background_normal
-                size_hint: 0.3, 0.1
-                pos_hint:{"center_x": 0.5, "center_y": 0.08}
+                size_hint: 0.3, 0.08
+                pos_hint:{"center_x": 0.33, "center_y": 0.08}
                 on_release: root.go_to_web()
+
+            MDFillRoundFlatButton:
+                text: "Clear Basket"
+                text_color: 1,1,1,1
+                md_bg_color: "#2c4591"
+                size_hint: 0.3, 0.08
+                pos_hint:{"center_x": 0.67, "center_y": 0.08}
+                on_release: root.delete_user_cart()
 
         MDBottomNavigationItem:
             name: 'screen 4'

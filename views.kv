@@ -87,6 +87,14 @@
                 root.without()
                 root.manager.transition.direction = "left"
 
+        MDIconButton:
+            icon: "power"
+            theme_icon_color: "Custom"
+            icon_color: 1,1,1,1
+            icon_size: "50sp"
+            pos_hint:{"x":0.82,"y":0.02}
+            on_release: app.stop()
+
 
 <RegisterWindow>:
     name: "register"

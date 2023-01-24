@@ -2,6 +2,8 @@ import os
 from mysql.connector import connect
 
 
+# This class provides database connection management and creating tables
+# Operating with specific table requires passing Database object in constructor to initialize connection
 class Database:
 
     def __init__(self):

@@ -50,6 +50,8 @@ class VerifyWindow(Screen):
             usersResources.verify_user(email=VerifyWindow.email_or_username, username=VerifyWindow.email_or_username)
             sm.current = "login"
             self.reset()
+        else:
+            self.ids.verify_message.text = "Try again"
 
     @staticmethod
     def send_email():
@@ -101,15 +103,16 @@ class LoginWindow(Screen):
                 sm.get_screen("main").cart()
                 self.reset()
                 sm.current = "main"
+
             else:
-                print("BAD PASSWORD")
+                self.ids.login_message.text = "BAD PASSWORD"
         elif dictionary and dictionary.get('is_verified') == 0:
             sm.get_screen("verify").set_user(dictionary.get('email'))
             sm.get_screen("verify").send_email()
             self.reset()
             sm.current = "verify"
         else:
-            print("NOT USER FOUND")
+            self.ids.login_message.text = "USER NOT FOUND"
 
     def create_new_account(self):
         self.reset()
@@ -118,6 +121,7 @@ class LoginWindow(Screen):
     def reset(self):
         self.email.text = ""
         self.password.text = ""
+        self.ids.login_message.text = "Login in or create new account"
 
     def without(self):
         self.reset()
@@ -139,21 +143,23 @@ class RegisterWindow(Screen):
             check = bool(dictionary)
 
             if not validate_email(self.email.text):
-                print("THAT EMAIL DOESN'T EXISTS")
+                self.ids.new_account_message.text = "USE REAL EMAIL"
                 self.reset()
 
             elif self.password.text != self.repeatedPassword.text:
-                print("PASSWORDS DON'T MATCH")
+                self.ids.new_account_message.text = "PASSWORDS DON'T MATCH"
                 self.reset()
             elif check:
-                print("USER ALREADY EXISTS")
+                self.ids.new_account_message.text = "USER ALREADY EXISTS"
             else:
                 if self.password.text == self.repeatedPassword.text and validate_email(self.email.text):
                     usersResources.add_user(self.username.text, self.password.text, self.email.text)
                     self.reset()
+                    self.ids.new_account_message.text = "Fill the form and click submit button"
                     sm.current = "login"
                     print("OK")
         else:
+            self.ids.new_account_message.text = "fill out all the form fields"
             self.reset()
 
     def reset(self):

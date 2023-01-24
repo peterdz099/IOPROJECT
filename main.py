@@ -1,5 +1,5 @@
 from kivy.core.window import Window
-from kivymd.uix.list import OneLineListItem, ThreeLineAvatarIconListItem, TwoLineAvatarListItem, ImageLeftWidget, \
+from kivymd.uix.list import OneLineListItem, TwoLineAvatarListItem, ImageLeftWidget, \
     TwoLineListItem
 from validate_email_address import validate_email
 from kivy.lang import Builder
@@ -26,10 +26,13 @@ from file_manager import load_file_and_save_to_csv
 
 
 def create_details_string(name, price, manu, shops, shop_list):
-    s = f"\n\tNAME: {name} \n\tPRICE: {price}\n\tMANUFACTURER: {manu}\n\tNUMBER OF SHOPS: {shops}\n\tBEST SHOP: {shop_list[0].name}\n\tDELIVERY METHOD:\n\t "
+    s = f"\nNAME: {name} \nPRICE: {price}\nMANUFACTURER: {manu}\nNUMBER OF SHOPS: {shops}\nBEST SHOP: " \
+        f"{shop_list[0].name}\nDELIVERY METHOD:\n "
+
     d = ""
     for delivery_method in shop_list[0].deliver_method:
-        d = d + "\t" + delivery_method[1] + "\t" + str(delivery_method[0]) + "zł" + "\n\t"
+        d = d + "\t" + delivery_method[1] + " " + str(delivery_method[0]) + " " + "\n"
+
     return s + d
 
 
@@ -264,10 +267,10 @@ class MainWindow(Screen):
 
                 self.ids.set.text = "Findings of: " + self.ids.find.text
             else:
-                print("DOESN'T EXISTS")
+                self.ids.message.text = "This toy doesn't exist"
         else:
             self.ids.find.text = ""
-            print("EMPTY")
+            self.ids.message.text = "Type a name of the toy!"
 
     def search_from_file(self):
         offer_list = load_file_and_save_to_csv()
@@ -363,10 +366,10 @@ class WithoutLoginWindow(Screen):
                 self.ids.set.text = "Findings of: " + self.ids.find.text
             else:
                 self.ids.find.text = ""
-                print("Doesn't exists")
+                self.ids.message.text = "This toy doesn't exist"
         else:
             self.ids.find.text = ""
-            print("EMPTY")
+            self.ids.message.text = "Type a name of the toy!"
 
     def clear_details(self):
         self.ids.details.text = ""

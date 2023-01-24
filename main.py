@@ -222,7 +222,6 @@ class MainWindow(Screen):
         self.clear_basket()
         self.cart()
 
-
     def history(self, user_id):
         user_history = historyResources.select_search_history(user_id)
 
@@ -235,7 +234,6 @@ class MainWindow(Screen):
             self.ids.scroll_history.add_widget(OneLineListItem(text='           Your search history is empty')),
 
     def cart(self):
-
         basket = shoppingListResources.select_shopping_list(MainWindow.user_id)
         if basket:
             for i in range(len(basket)):
@@ -249,13 +247,17 @@ class MainWindow(Screen):
         else:
             self.ids.scroll_cart.add_widget(OneLineListItem(text="              Your cart list is empty")),
 
+    def import_cart_to_file(self):
+        basket = shoppingListResources.select_shopping_list(MainWindow.user_id)
+        if basket:
+
     def search(self):
 
         print(self.ids.find.text)
         search = self.ids.find.text
 
         if any(c.isalpha() for c in search):
-            toy_list = webscraper.scraper(search, MainWindow.allegro_mode,MainWindow.sort_mode,1)
+            toy_list = webscraper.scraper(search, MainWindow.allegro_mode, MainWindow.sort_mode, 1)
             print(toy_list)
             if len(toy_list):
                 print(f"wyszukujesz w trybie sortowania {MainWindow.sort_mode}")
@@ -337,7 +339,8 @@ class MainWindow(Screen):
     def add_to_basket(self):
         o = MainWindow.obj
         print(o)
-        offersResources.add_offer(o.id, o.name, o.min_price, f"https://www.ceneo.pl/{o.id}", o.shop_list[0].name, o.manufacturer,
+        offersResources.add_offer(o.id, o.name, o.min_price, f"https://www.ceneo.pl/{o.id}", o.shop_list[0].name,
+                                  o.manufacturer,
                                   o.photo_url)
         shoppingListResources.add_shopping_list(MainWindow.user_id, o.id)
         self.clear_basket()
@@ -346,7 +349,8 @@ class MainWindow(Screen):
     def add_to_basket_from_file(self):
         o = MainWindow.obj2
         print(o)
-        offersResources.add_offer(o.id, o.name, o.min_price, f"https://www.ceneo.pl/{o.id}", o.shop_list[0].name, o.manufacturer,
+        offersResources.add_offer(o.id, o.name, o.min_price, f"https://www.ceneo.pl/{o.id}", o.shop_list[0].name,
+                                  o.manufacturer,
                                   o.photo_url)
         shoppingListResources.add_shopping_list(MainWindow.user_id, o.id)
         self.clear_basket()

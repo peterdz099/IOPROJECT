@@ -264,9 +264,7 @@ class MainWindow(Screen):
 
         save_cart_to_file(basket_list)
 
-
     def search(self):
-
         print(self.ids.find.text)
         search = self.ids.find.text
 
@@ -299,19 +297,23 @@ class MainWindow(Screen):
 
     def search_from_file(self):
         offer_list = load_file_and_save_to_csv(MainWindow.file_mode, MainWindow.file_sort_mode)
-        self.ids.screen_manager_2.current = "s2"
-        for i in range(len(offer_list)):
-            if not isinstance(offer_list[i], str):
-                self.ids.scroll2.add_widget(TwoLineAvatarListItem(
-                    ImageLeftWidget(
-                        source=f"https:{offer_list[i].photo_url}"),
-                    text=offer_list[i].name,
-                    secondary_text=f"https://www.ceneo.pl/{offer_list[i].id}",
-                    id=f"{i}",
-                    on_release=(lambda x: self.to_file_product(offer_list[int(x.id)]))
-                ))
-            else:
-                self.ids.scroll2.add_widget(OneLineListItem(text=offer_list[i]))
+
+        if len(offer_list):
+            self.ids.screen_manager_2.current = "s2"
+            for i in range(len(offer_list)):
+                if not isinstance(offer_list[i], str):
+                    self.ids.scroll2.add_widget(TwoLineAvatarListItem(
+                        ImageLeftWidget(
+                            source=f"https:{offer_list[i].photo_url}"),
+                        text=offer_list[i].name,
+                        secondary_text=f"https://www.ceneo.pl/{offer_list[i].id}",
+                        id=f"{i}",
+                        on_release=(lambda x: self.to_file_product(offer_list[int(x.id)]))
+                    ))
+                else:
+                    self.ids.scroll2.add_widget(OneLineListItem(text=offer_list[i]))
+        else:
+            self.ids.import_error.text = "Empty file"
 
     @staticmethod
     def change_mode(mode):
@@ -370,10 +372,12 @@ class MainWindow(Screen):
         self.clear_basket()
         self.cart()
 
-    def go_to_web(self):
+    @staticmethod
+    def go_to_web():
         webbrowser.open(f"https://www.ceneo.pl/{MainWindow.obj.id}")
 
-    def go_to_web2(self):
+    @staticmethod
+    def go_to_web2():
         webbrowser.open(f"https://www.ceneo.pl/{MainWindow.obj2.id}")
 
 

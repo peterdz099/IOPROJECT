@@ -14,20 +14,27 @@ def load_file_and_save_to_csv(mode, sort_mode):
                                           filetypes=(("csv files", "*.csv"), ("all files", "*.*")))
     if filename == '':
         return []
-    listing = pd.read_csv(filename, header=None).iloc[:, 0].tolist()
-    offer_list = []
-    for search in listing:
-        search = search.replace(' ', '+')
-        ws = scraper(search, mode, sort_mode)
-        if ws:
-            offer_list.append(ws[0])
-        else:
-            offer_list.append("NOT FOUND")
 
-    #df = pd.DataFrame([delete_columns(vars(s)) for s in offer_list])
-    #df.to_csv('wyniki.csv')
+    offer_list = []
+    try:
+        listing = pd.read_csv(filename, header=None).iloc[:, 0].tolist()
+
+        for search in listing:
+            search = search.replace(' ', '+')
+            ws = scraper(search, mode, sort_mode)
+            if ws:
+                offer_list.append(ws[0])
+            else:
+                offer_list.append("NOT FOUND")
+            print(offer_list)
+            return offer_list
+    except pd.errors.EmptyDataError:
+        print(offer_list)
+        return offer_list
+
+    # df = pd.DataFrame([delete_columns(vars(s)) for s in offer_list])
+    # df.to_csv('wyniki.csv')
     # test
-    return offer_list
 
 
 def save_cart_to_file(offer_list):

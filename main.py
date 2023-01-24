@@ -58,9 +58,9 @@ class VerifyWindow(Screen):
         email_sender = "toysapp8@gmail.com"
         email_password = os.environ.get("EMAIL_PASSWORD")
 
-        email_receiver = VerifyWindow.email_or_username
+        #email_receiver = VerifyWindow.email_or_username
 
-        # email_receiver = "piotrdziula@gmail.com"
+        email_receiver = "akljsdhgfkhasdfjkhgsadkjfhgaksjdh@gmail.com"
 
         subject = "Verification Code"
 
@@ -86,6 +86,7 @@ class VerifyWindow(Screen):
         self.ids.code.text = ""
         VerifyWindow.generated_code = None
         VerifyWindow.email_or_username = ""
+        sm.current= "login"
 
 
 class LoginWindow(Screen):
@@ -135,6 +136,7 @@ class RegisterWindow(Screen):
     repeatedPassword = ObjectProperty(None)
 
     def submit(self):
+
         if self.username.text != "" and self.email.text != "" and self.password.text != "" \
                 and self.repeatedPassword.text != "":
 

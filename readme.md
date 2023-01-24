@@ -1,8 +1,8 @@
-# ToyFinder
+# Toys.app
 ## _Znajdź swoją wymarzoną zabawke w okazyjnej cenie_
 
 
-ToyFinder to aplikacja która pozwoli użytkownikowi w szybki i łatwy sposób znaleźć wymarzoną
+Toys.app to aplikacja która pozwoli użytkownikowi w szybki i łatwy sposób znaleźć wymarzoną
 zabawkę oraz wyświetli podstawowe informację które pomogą dokonać odpowiedniego wyboru.
 Aplikacja korzysta z bazy danych najwiekszej porównarki cen w Polsce jaką jest Ceneo.pl.
 

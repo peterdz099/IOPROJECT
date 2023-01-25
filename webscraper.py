@@ -157,25 +157,27 @@ class Toy:
         except:
             error = True
         if error == False:
-            json_data = requests.get(deliveryURL).text
-            parsed = json.loads(json_data)
-            deliver_html = parsed["ProductDetailsAdditionalPartial"]
-            delivery_soup = BeautifulSoup(deliver_html, 'html.parser')
-            deliveries = delivery_soup.find_all(
-                "li",
-                class_="product-offer-details__additional__delivery-costs__list__item",
-            )
+            try:
+                json_data = requests.get(deliveryURL).text
+                parsed = json.loads(json_data)
+                deliver_html = parsed["ProductDetailsAdditionalPartial"]
+                delivery_soup = BeautifulSoup(deliver_html, 'html.parser')
+                deliveries = delivery_soup.find_all(
+                    "li",
+                    class_="product-offer-details__additional__delivery-costs__list__item",
+                )
 
-            for deliver in deliveries:
-                for item in deliver.find_all("li"):
-                    productPrice = item.get_text()
-                    deliveryInfo = productPrice.replace('\n', '').split("zł")
-                    if len(deliveryInfo) > 1:
-                        line = []
-                        line.append(float(deliveryInfo[0].replace(",", ".")))
-                        line.append(deliveryInfo[1])
-                        self.shop_list[0].deliver_method.append(line)
-
+                for deliver in deliveries:
+                    for item in deliver.find_all("li"):
+                        productPrice = item.get_text()
+                        deliveryInfo = productPrice.replace('\n', '').split("zł")
+                        if len(deliveryInfo) > 1:
+                            line = []
+                            line.append(float(deliveryInfo[0].replace(",", ".")))
+                            line.append(deliveryInfo[1])
+                            self.shop_list[0].deliver_method.append(line)
+            except:
+                pass
 
 
 
